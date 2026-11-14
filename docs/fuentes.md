@@ -18,6 +18,21 @@ Este documento registra cada dato que aparece en la aplicación. Ningún dato se
 |---|---|---|---|---|---|---|---|
 | — | — | — | — | — | — | — | — |
 
+## Catálogo de fuentes
+
+Tabla de fuentes que la base de datos conoce (tabla `fuentes`). Cada fila debe coincidir exactamente con la semilla de `supabase/migrations/20261114000000_esquema_inicial.sql`. La prueba `tests/unit/fuentes-coherencia.test.js` comprueba esa coincidencia en cada CI.
+
+| ID | Nombre | URL | Clase | Notas |
+|---|---|---|---|---|
+| F-NASA-HO | NASA History Office | <https://www.nasa.gov/history/> | primaria | No consultada: acceso bloqueado por la política de red del 2026-11-14. Pendiente de lectura. |
+| F-WTOP | WTOP | <https://wtop.com/national/2026/04/artemis-iis-grand-moon-finale-is-almost-here-with-a-pacific-splashdown-to-cap-nasas-lunar-comeback/> | secundaria | Medio de noticias. Solo para datos pendientes de verificación. |
+| F-NTD | NTD | <https://www.ntd.com/artemis-ii-mission-ends-with-splashdown-off-san-diego_1137976.html> | secundaria | Medio de noticias. Solo para datos pendientes de verificación. |
+| F-BOEING | Boeing | <https://www.boeing.com/features/2026/04/artemis-ii-crew-back-on-earth-after-historic-lunar-flyby> | secundaria | Contratista de NASA, no es fuente primaria de la agencia. |
+| F-SPO | SpacePolicyOnline | <https://spacepolicyonline.com/news/nasa-is-full-steam-ahead-on-artemis-iii-iv-and-v/> | secundaria | Fechas de Artemis III a V. Hay conflicto entre fuentes sobre Artemis III. |
+| F-STARLUST-A | Starlust (Artemis III) | <https://starlust.org/nas-as-artemis-iii-new-date-goal-and-everything-else-you-need-to-know/> | secundaria | Fecha de Artemis III. Conflicto con otras fuentes. |
+| F-STARLUST-B | Starlust (Artemis IV y V) | <https://starlust.org/heres-what-nasa-is-planning-for-artemis-iv-and-v-now-that-the-roadmap-to-the-moon-has-been-revised/> | secundaria | Previsiones de Artemis IV y V. |
+| F-IFS | IFLScience | <https://www.iflscience.com/artemis-iii-has-already-been-pushed-back-to-late-2027-just-2-months-after-nasa-announced-ambitious-new-moon-plan-83377> | secundaria | Indica finales de 2027 para Artemis III. Conflicto con otras fuentes. |
+
 ## Registro
 
 ### Misiones del programa Apolo (1 a 17)
