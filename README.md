@@ -27,14 +27,15 @@ Astro-fuente reúne en una sola experiencia:
 
 ## Estado del proyecto
 
-El proyecto está en **etapa temprana**: definido el alcance general, pendiente la primera versión (MVP) y la decisión sobre el reto principal del formulario de inscripción.
+El MVP está implementado en local. Pendientes: crear el proyecto de Supabase, enlazar Vercel y el acceso a fuentes primarias de NASA (ver `docs/decisiones.md`).
 
 | Módulo | Estado |
 |---|---|
 | Alcance y documentación | En curso |
-| Visor del sistema solar y la galaxia | Pendiente |
-| Misiones Apolo 11 y Artemis II | Pendiente (datos por verificar) |
-| Simulador de vuelo | Pendiente |
+| Visor del sistema solar | MVP: 2D, datos pendientes de verificación |
+| Histórico Apolo 1 a 17 y trayectorias de Apolo 11 y Artemis II | MVP: fechas pendientes, esquema sin cifras |
+| Simulador de vuelo | MVP: fase única, modelo simplificado |
+| Galaxia y Vía Láctea en 3D | Fuera del MVP |
 | Panel de programas futuros | Pendiente |
 | Noticias y satélites | Pendiente |
 
@@ -48,15 +49,43 @@ El seguimiento de tareas se realiza en la pestaña **Issues** del repositorio.
 - [`.env.example`](.env.example): variables de entorno del proyecto (actualmente ninguna).
 - [`docs/fuentes.md`](docs/fuentes.md): registro de fuentes y estado de cada dato.
 
+## Ejecutar en local
+
+No hay paso de compilación. Sirve la carpeta con cualquier servidor estático, por ejemplo:
+
+```bash
+python3 -m http.server 8080
+```
+
+Abre `http://localhost:8080`. Sin configurar la base de datos, la aplicación funciona y muestra los datos como pendientes de verificación.
+
+Pruebas unitarias (requieren Node 18 o superior, sin dependencias):
+
+```bash
+npm test
+```
+
 ## Estructura del repositorio
 
 ```text
 .
+├── index.html            Punto de entrada (sin build)
+├── src/
+│   ├── css/app.css       Estilos
+│   ├── js/app.js         Navegación por hash y carga inicial
+│   ├── js/config.js      URL y clave publicable (públicas por diseño)
+│   ├── js/datos/         Acceso de solo lectura a Supabase
+│   ├── js/componentes/   Componente de verificabilidad (dato)
+│   ├── js/simulador/     Modelo físico, integradores y simulación
+│   └── js/vistas/        Vistas: sistema solar, histórico, misiones, fuentes
+├── supabase/migrations/  Esquema, restricciones, RLS y semillas
+├── tests/
+│   ├── unit/             Pruebas de Node (npm test)
+│   └── db/               Pruebas de restricciones y RLS en Postgres
+├── docs/                 Contexto, fuentes, decisiones y bloqueos
 ├── .github/              Plantillas de issues y pull requests
-├── docs/                 Documentación del proyecto y registro de fuentes
 ├── CONTRIBUTING.md       Guía de contribución
-├── README.md             Este archivo
-└── ...                   El código fuente se añadirá en fases posteriores
+└── README.md             Este archivo
 ```
 
 ## Seguridad y datos sensibles

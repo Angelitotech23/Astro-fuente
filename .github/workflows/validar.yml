@@ -23,6 +23,19 @@ jobs:
             **/*.md
             !node_modules/**
 
+  pruebas:
+    name: Pruebas unitarias
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Ejecutar pruebas (modelo físico, verificabilidad y coherencia de fuentes)
+        run: npm test
+
   secretos:
     name: Buscar secretos
     runs-on: ubuntu-latest

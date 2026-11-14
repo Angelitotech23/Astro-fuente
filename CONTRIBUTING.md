@@ -59,12 +59,24 @@ fix(simulador): corregir unidad de velocidad de escape
 - Cada fórmula del simulador debe incluir un comentario o una nota visible que indique su origen.
 - No se añaden dependencias nuevas sin justificarlas en el pull request.
 
-## 5. Seguridad
+### Fuentes: dos lugares, una PR
+
+Una fuente se registra en dos sitios que deben coincidir: la tabla del catálogo de `docs/fuentes.md` y la semilla de la migración inicial en `supabase/migrations/`. Cambia ambos en la misma PR. La prueba `tests/unit/fuentes-coherencia.test.js` falla si no coinciden.
+
+## 5. Pruebas
+
+```bash
+npm test
+```
+
+Las pruebas unitarias cubren el modelo físico, el componente de verificabilidad y la coherencia de fuentes. Un cambio de física debe añadir o ajustar su prueba analítica.
+
+## 6. Seguridad
 
 - Nunca subas credenciales, tokens, claves privadas ni archivos `.env`. El `.gitignore` los excluye, pero la responsabilidad de revisar antes de confirmar cambios es de quien contribuye.
 - Si detectas un secreto expuesto, avisa de inmediato al equipo y considera la clave comprometida; no basta con borrarla del historial.
 
-## 6. Revisión de pull requests
+## 7. Revisión de pull requests
 
 Una revisión se considera completa cuando:
 
@@ -74,6 +86,6 @@ Una revisión se considera completa cuando:
 - [ ] La documentación afectada está actualizada.
 - [ ] La descripción del pull request explica qué cambia y cómo se verificó.
 
-## 7. Reportar problemas
+## 8. Reportar problemas
 
 Usa las plantillas de issues disponibles en la pestaña **Issues**. Para problemas de seguridad, no abras un issue público; contacta directamente al equipo.
