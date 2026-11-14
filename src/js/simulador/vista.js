@@ -99,7 +99,11 @@ export function vistaSimulador() {
   const contenedor = el('section', { class: 'vista', 'aria-labelledby': 'titulo-simulador' });
   contenedor.append(el('h1', { id: 'titulo-simulador', tabindex: '-1', text: 'Simulador de vuelo' }));
   contenedor.append(el('p', {
-    text: 'Modelo simplificado de una fase vertical. Cambia los parámetros y el resultado se recalcula al momento. El caso didáctico es sintético.',
+    text: 'Modelo simplificado de una fase vertical. Cada resultado muestra la fórmula y los supuestos. El caso didáctico es sintético (sin vehículo real ni fuente de agencia).',
+  }));
+  contenedor.append(el('p', {
+    class: 'nota',
+    text: 'Cálculos ilustrativos, no predicciones de misión. Fuente del caso: parámetros sintéticos del proyecto · revisión 2026-11-14.',
   }));
 
   const form = el('form', { class: 'simulador__form', onsubmit: (e) => e.preventDefault(), novalidate: true });
@@ -163,7 +167,25 @@ export function vistaSimulador() {
 
     const ref = referencias(p);
     const r = sim.resumen;
-    if (!sim.sinDespegue && r) {
+    const m = metricasCohete(p);
+    const empujeN = p.mdot * p.ve;
+    const pesoLocalN = p.m0 * p.g;
+    const noDespega = Boolean(sim.sinDespegue) || empujeN <= pesoLocalN;
+
+    if (noDespega) {
+      resumen.replaceChildren(
+        el('div', { class: 'simulador__no-despega', role: 'status' }, [
+          el('h2', { text: 'No despega' }),
+          el('p', {
+            text: `El empuje inicial (${fmt(empujeN)} N) no supera el peso local (${fmt(pesoLocalN)} N = m₀ · g). El vehículo permanece en el suelo.`,
+          }),
+          el('p', {
+            class: 'nota',
+            text: `Comparación: F = ṁ · vₑ = ${p.mdot} · ${p.ve}; peso = ${p.m0} · ${p.g}. Condición de despegue: F > m₀ · g.`,
+          }),
+        ]),
+      );
+    } else if (r) {
       resumen.replaceChildren(el('dl', { class: 'resumen' }, [
         el('dt', { text: 'Tiempo de combustión t_b' }), el('dd', { text: fmt(r.tb) }),
         el('dt', { text: 'Velocidad al agotarse v_b' }), el('dd', { text: fmt(r.vb) }),
@@ -172,33 +194,45 @@ export function vistaSimulador() {
         el('dt', { text: 'Velocidad de impacto |v_imp|' }), el('dd', { text: r.vimp === null ? 'No aplica (g = 0)' : fmt(r.vimp) }),
         el('dt', { text: 'Instante de impacto' }), el('dd', { text: r.tImpacto === null ? 'No alcanzado' : fmt(r.tImpacto) }),
       ]));
-    } else {
-      resumen.replaceChildren(el('p', { text: 'Sin resultado: el cohete no despega con estos valores.' }));
     }
 
     const muestras = sim.muestras;
-    const puntos = muestras.map((m) => ({ t: m.t, h: m.h, v: m.v, a: m.a }));
+    const puntos = muestras.map((s) => ({ t: s.t, h: s.h, v: s.v, a: s.a }));
     graficas.replaceChildren(
       graficar('Altura h(t)', puntos, 'h', 'm'),
       graficar('Velocidad v(t)', puntos, 'v', 'm/s'),
       graficar('Aceleración a(t)', puntos, 'a', 'm/s²'),
     );
-    const m = metricasCohete(p);
     const extras = [
+      {
+        titulo: 'Peso (con la g del escenario)',
+        formula: 'P = m₀ · g',
+        sustituida: `${p.m0} · ${p.g} = ${fmt(pesoLocalN)} N`,
+      },
       {
         titulo: 'Impulso específico',
         formula: 'Isp = vₑ / g₀',
         sustituida: `${p.ve} / ${G0} = ${fmt(m.isp)} s`,
       },
       {
-        titulo: 'Relación empuje/peso (TWR)',
+        titulo: 'Relación empuje/peso (TWR, con g₀)',
         formula: 'TWR = ṁ · vₑ / (m₀ · g₀)',
         sustituida: `${p.mdot} · ${p.ve} / (${p.m0} · ${G0}) = ${fmt(m.twr)}`,
+      },
+      {
+        titulo: 'Aceleración inicial (con g₀)',
+        formula: 'a₀ = (F − m₀ · g₀) / m₀',
+        sustituida: `(${fmt(empujeN)} − ${p.m0} · ${G0}) / ${p.m0} = ${fmt(m.aceleracionInicial)} m/s²`,
       },
       {
         titulo: 'Δv ideal (sin gravedad ni arrastre)',
         formula: 'Δv = vₑ · ln(m₀ / m_f)',
         sustituida: `${p.ve} · ln(${p.m0} / ${p.mf}) = ${fmt(m.deltaV)}`,
+      },
+      {
+        titulo: 'Masa de propelente',
+        formula: 'm_prop = m₀ − m_f',
+        sustituida: `${p.m0} − ${p.mf} = ${fmt(m.masaPropelente)}`,
       },
     ];
     panelFormulas.replaceChildren(...[...formulas(p, ref), ...extras].map((f) => el('article', { class: 'formula' }, [
