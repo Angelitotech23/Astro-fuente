@@ -8,6 +8,7 @@ const MODULOS = [
   { nombre: 'Histórico Apolo y Artemis II', estado: 'Línea de tiempo con fechas pendientes', ruta: '#/historico' },
   { nombre: 'Trayectorias de Apolo 11 y Artemis II', estado: 'Esquema ilustrativo, sin cifras', ruta: '#/mision/apolo-11' },
   { nombre: 'Simulador de vuelo', estado: 'Modelo simplificado de una fase', ruta: '#/simulador' },
+  { nombre: 'Programas futuros', estado: 'Artemis III, IV y V, con fecha de corte y fuentes', ruta: '#/futuro' },
   { nombre: 'Fuentes', estado: 'Registro legible de cada fuente', ruta: '#/fuentes' },
 ];
 

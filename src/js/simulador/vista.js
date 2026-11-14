@@ -1,7 +1,7 @@
 // Interfaz del simulador de fase única: controles, gráficas, resumen, fórmulas y supuestos.
 
 import { CASO_DIDACTICO } from './modelo.js';
-import { referencias, simularVuelo } from './simulacion.js';
+import { G0, metricasCohete, referencias, simularVuelo } from './simulacion.js';
 import { el, svg } from '../vistas/util.js';
 
 const CAMPOS = [
@@ -183,7 +183,25 @@ export function vistaSimulador() {
       graficar('Velocidad v(t)', puntos, 'v', 'm/s'),
       graficar('Aceleración a(t)', puntos, 'a', 'm/s²'),
     );
-    panelFormulas.replaceChildren(...formulas(p, ref).map((f) => el('article', { class: 'formula' }, [
+    const m = metricasCohete(p);
+    const extras = [
+      {
+        titulo: 'Impulso específico',
+        formula: 'Isp = vₑ / g₀',
+        sustituida: `${p.ve} / ${G0} = ${fmt(m.isp)} s`,
+      },
+      {
+        titulo: 'Relación empuje/peso (TWR)',
+        formula: 'TWR = ṁ · vₑ / (m₀ · g₀)',
+        sustituida: `${p.mdot} · ${p.ve} / (${p.m0} · ${G0}) = ${fmt(m.twr)}`,
+      },
+      {
+        titulo: 'Δv ideal (sin gravedad ni arrastre)',
+        formula: 'Δv = vₑ · ln(m₀ / m_f)',
+        sustituida: `${p.ve} · ln(${p.m0} / ${p.mf}) = ${fmt(m.deltaV)}`,
+      },
+    ];
+    panelFormulas.replaceChildren(...[...formulas(p, ref), ...extras].map((f) => el('article', { class: 'formula' }, [
       el('h3', { text: f.titulo }),
       el('p', { class: 'formula__simbolica', text: f.formula }),
       el('p', { class: 'formula__sustituida', text: `= ${f.sustituida}` }),

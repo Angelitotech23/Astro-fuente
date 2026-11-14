@@ -4,7 +4,13 @@ import assert from 'node:assert/strict';
 
 import { CASO_DIDACTICO, derivadas, tiempoCombustion } from '../../src/js/simulador/modelo.js';
 import { integrar, pasoEuler, pasoRK4 } from '../../src/js/simulador/integrador.js';
-import { referencias, simularVuelo, validarParametros } from '../../src/js/simulador/simulacion.js';
+import {
+  G0,
+  metricasCohete,
+  referencias,
+  simularVuelo,
+  validarParametros,
+} from '../../src/js/simulador/simulacion.js';
 
 const TOL = 1e-6;
 
@@ -99,4 +105,18 @@ test('aviso cuando el empuje no supera el peso', () => {
   assert.ok(v.avisos.length > 0);
   const sim = simularVuelo({ m0: 10, mf: 1, mdot: 1, ve: 1, g: 9.8 }, { dt: 1e-3 });
   assert.equal(sim.sinDespegue, true);
+});
+
+test('métricas de cohete del caso didáctico: Isp, TWR, Δv y propelente', () => {
+  const m = metricasCohete(CASO_DIDACTICO);
+  assert.ok(relErr(m.isp, 1 / G0) < TOL, `Isp = ${m.isp}`);
+  assert.ok(relErr(m.twr, 1 / (2 * G0)) < TOL, `TWR = ${m.twr}`);
+  assert.ok(relErr(m.deltaV, Math.LN2) < TOL, `Δv = ${m.deltaV}`);
+  assert.equal(m.masaPropelente, 1);
+  assert.ok(relErr(m.aceleracionInicial, (1 - 2 * G0) / 2) < TOL);
+});
+
+test('Δv de métricas coincide con Tsiolkovsky sin gravedad', () => {
+  const p = { ...CASO_DIDACTICO, g: 0 };
+  assert.ok(relErr(metricasCohete(p).deltaV, referencias(p).vb) < TOL);
 });

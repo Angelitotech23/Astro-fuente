@@ -21,9 +21,12 @@ Estado al 2026-11-14. Sesión sin persona disponible para confirmar: ninguna acc
 
 ## 3. Datos y contenido
 
+- **Programas futuros (Artemis III a V)** se muestran en `#/futuro` como **planificados**, con estado, fecha de corte (2026-11-14) y la fuente de cada fecha. Cuando las fuentes discrepan (Artemis III), se muestran todas y no se fija una sola. No se presentan como datos verificados.
+- **Métricas del simulador**: Isp, relación empuje/peso y Δv ideal se calculan en `metricasCohete` con g₀ = 9,80665 m/s² y se muestran con su fórmula.
+
 - **Todos los datos de misiones están `pendiente`.** No se ha leído ninguna fuente primaria. No se ha escrito ninguna cifra de memoria.
 - **Artemis II** usa fuentes secundarias (F-WTOP, F-NTD, F-BOEING). Se muestra como pendiente de verificación, sin cifra.
-- **Artemis III** tiene fechas en conflicto entre fuentes: no se publica. Artemis III a V quedan fuera del MVP.
+- **Artemis III** tiene fechas en conflicto entre fuentes: no se fija una fecha única. Artemis III a V aparecen en `#/futuro` según la sección anterior.
 - **Apolo 1 a 17**: solo identificadores. Apolo 2 y 3 no tuvieron misión (según `docs/fuentes.md`) y no aparecen en la línea de tiempo.
 - **Explicaciones de los eventos**: texto marcado como pendiente de verificación. La redacción con fuente primaria depende del acceso a nasa.gov (bloqueo 3). La tabla `eventos` no tiene columna de fuente; si se requiere citar por afirmación, hace falta una decisión de esquema.
 - **Sistema solar**: los valores de radio, distancia y periodo se registran como pendientes. Son las únicas filas de la semilla sin fuente asociada.

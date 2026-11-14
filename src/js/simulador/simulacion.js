@@ -55,6 +55,28 @@ export function referencias(p) {
   return { tb, vb, hb, hmax, vimp };
 }
 
+/** Gravedad estándar al nivel del mar, en m/s². Solo para convertir vₑ en Isp y para TWR. */
+export const G0 = 9.80665;
+
+/**
+ * Métricas de cohete (ecuaciones de docs de propuesta, sección 7.5).
+ *   Isp      = vₑ / g₀                      [s]
+ *   TWR      = F / (m₀ · g₀),  F = ṁ · vₑ   [adimensional]
+ *   a₀       = (F − m₀ · g₀) / m₀           [m/s²]
+ *   Δv       = vₑ · ln(m₀ / m_f)            [m/s], sin gravedad ni arrastre
+ *   m_prop   = m₀ − m_f                     [unidades de masa]
+ */
+export function metricasCohete(p) {
+  const F = p.mdot * p.ve;
+  return {
+    isp: p.ve / G0,
+    twr: F / (p.m0 * G0),
+    aceleracionInicial: (F - p.m0 * G0) / p.m0,
+    deltaV: p.ve * Math.log(p.m0 / p.mf),
+    masaPropelente: p.m0 - p.mf,
+  };
+}
+
 function muestra(t, y, p) {
   return { t, h: y[0], v: y[1], m: y[2], a: aceleracion(t, y, p) };
 }

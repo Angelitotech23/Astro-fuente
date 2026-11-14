@@ -1,12 +1,13 @@
 // Punto de entrada: navegación por hash y carga inicial del catálogo.
 //
-// Rutas: #/ · #/sistema-solar · #/historico · #/mision/<id> · #/simulador · #/director · #/fuentes
+// Rutas: #/ · #/sistema-solar · #/historico · #/mision/<id> · #/simulador · #/director · #/fuentes · #/futuro
 
 import { ErrorDatos, cargarCatalogo, catalogoLocal } from './datos/supabase.js';
 import { vistaInicio } from './vistas/inicio.js';
 import { vistaSistemaSolar } from './vistas/sistema-solar.js';
 import { vistaHistorico, vistaMision } from './vistas/misiones.js';
 import { vistaFuentes } from './vistas/fuentes.js';
+import { vistaFuturo } from './vistas/futuro.js';
 import { vistaSimulador } from './simulador/vista.js';
 import { vistaDirector } from './director/vista.js';
 
@@ -33,6 +34,7 @@ function resolver(partes) {
     case 'simulador': return () => vistaSimulador();
     case 'director': return () => vistaDirector();
     case 'fuentes': return (c, e) => vistaFuentes(c, e);
+    case 'futuro': return () => vistaFuturo();
     default: return null;
   }
 }
