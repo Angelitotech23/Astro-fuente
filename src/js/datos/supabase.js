@@ -1,9 +1,10 @@
-// Acceso de solo lectura a Supabase.
+// Acceso de solo lectura a Supabase, con catálogo local de respaldo.
 //
 // supabase-js se carga desde cdn.jsdelivr.net con versión exacta (dos semanas
 // o más de antigüedad). El cliente usa la clave publicable de src/js/config.js.
 
 import { CONFIG } from '../config.js';
+import { FUENTES_LOCALES } from './fuentes-locales.js';
 
 export const VERSION_SUPABASE_JS = '2.45.4';
 const URL_SDK = `https://cdn.jsdelivr.net/npm/@supabase/supabase-js@${VERSION_SUPABASE_JS}/+esm`;
@@ -18,6 +19,16 @@ export class ErrorDatos extends Error {
 
 export function hayConfiguracion() {
   return Boolean(CONFIG.supabaseUrl && CONFIG.supabasePublishableKey);
+}
+
+/** Catálogo mínimo usable sin backend (fuentes locales; resto vacío). */
+export function catalogoLocal() {
+  return {
+    fuentes: FUENTES_LOCALES.map((f) => ({ ...f })),
+    misiones: [],
+    datos: [],
+    eventos: [],
+  };
 }
 
 let clientePromesa = null;
@@ -46,13 +57,28 @@ async function leerTabla(tabla, columnaOrden) {
   return data ?? [];
 }
 
-/** Carga el catálogo completo. Lanza ErrorDatos si no hay conexión o configuración. */
+/**
+ * Carga el catálogo completo.
+ * Sin configuración: devuelve fuentes locales y marca error `sin_configuracion`
+ * para que la UI muestre el aviso, sin dejar #/fuentes vacío.
+ */
 export async function cargarCatalogo() {
-  const [fuentes, misiones, datos, eventos] = await Promise.all([
-    leerTabla('fuentes', 'id'),
-    leerTabla('misiones', 'orden'),
-    leerTabla('datos', 'id'),
-    leerTabla('eventos', 'orden'),
-  ]);
-  return { fuentes, misiones, datos, eventos };
+  if (!hayConfiguracion()) {
+    const error = new ErrorDatos(
+      'sin_configuracion',
+      'Falta la URL y la clave publicable en src/js/config.js.',
+    );
+    return { catalogo: catalogoLocal(), error };
+  }
+  try {
+    const [fuentes, misiones, datos, eventos] = await Promise.all([
+      leerTabla('fuentes', 'id'),
+      leerTabla('misiones', 'orden'),
+      leerTabla('datos', 'id'),
+      leerTabla('eventos', 'orden'),
+    ]);
+    return { catalogo: { fuentes, misiones, datos, eventos }, error: null };
+  } catch (error) {
+    return { catalogo: catalogoLocal(), error };
+  }
 }

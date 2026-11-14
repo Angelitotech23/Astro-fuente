@@ -101,6 +101,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 
 h1 { font-size: 1.6rem; margin: 0.5em 0; }
+h1:focus { outline: none; }
+h1:focus-visible { outline: 3px solid var(--color-acento); outline-offset: 2px; }
 h2 { font-size: 1.25rem; margin: 1.2em 0 0.4em; }
 h3 { font-size: 1.05rem; margin: 0.8em 0 0.3em; }
 
@@ -301,6 +303,11 @@ h3 { font-size: 1.05rem; margin: 0.8em 0 0.3em; }
   border: 1px solid var(--color-borde);
   border-radius: var(--radio);
   cursor: pointer;
+  background: var(--color-fondo);
+}
+.opcion--activa {
+  border-color: var(--color-acento);
+  background: color-mix(in srgb, var(--color-acento) 10%, var(--color-superficie));
 }
 .opcion input { margin-top: 3px; }
 .opcion__titulo { font-weight: 600; }
@@ -310,10 +317,24 @@ h3 { font-size: 1.05rem; margin: 0.8em 0 0.3em; }
   font-size: 0.92rem;
 }
 .opcion--deshabilitada { opacity: 0.55; cursor: not-allowed; }
+.director__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+.director__cabecera h1 { margin-bottom: 0; }
+.idioma { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.idioma__etiqueta { color: var(--color-texto-suave); font-size: 0.9rem; }
 .director__acciones { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
 .boton--secundario {
   background: transparent;
   color: var(--color-acento);
+}
+.boton--activo {
+  background: var(--color-acento);
+  color: var(--color-acento-texto);
 }
 .ficha__campos {
   display: grid;

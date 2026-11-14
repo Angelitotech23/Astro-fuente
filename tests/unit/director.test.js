@@ -114,3 +114,18 @@ test('aviso de resolución cuando hires va a órbita lunar alta', () => {
   // Puede o no ser éxito según potencia/datos; el aviso de resolución debe existir.
   assert.ok(r.causas.some((c) => c.id === 'resolucion' && c.severidad === 'aviso'));
 });
+
+test('mensajes del debrief respetan el idioma EN', () => {
+  const r = evaluarMision({
+    objetivoId: 'orbita-ciencia-lunar',
+    busId: 'bus-pesado',
+    instrumentoIds: ['radar', 'imagen-hires', 'espectrometro'],
+    lanzadorId: 'lanzador-pequeno',
+    orbitaId: 'lunar-100',
+  }, 'en');
+  assert.equal(r.exito, false);
+  const masa = r.causas.find((c) => c.id === 'masa');
+  assert.ok(masa);
+  assert.match(masa.mensaje, /exceeds launcher capacity/i);
+  assert.ok(r.chequeos.some((c) => c.id === 'masa' && /Mass vs launcher/i.test(c.etiqueta)));
+});

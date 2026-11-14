@@ -6,14 +6,17 @@ Módulo jugable que cubre el núcleo del reto *Space Mission Design Game*.
 
 `#/director` → `src/js/director/vista.js`
 
+Idioma: conmutador **ES / EN** (persistido en `localStorage`).
+
 ## Archivos
 
 | Archivo | Rol |
 |---|---|
 | `src/js/director/catalogo.js` | Objetivos, buses, instrumentos, lanzadores, órbitas y fuentes |
-| `src/js/director/evaluar.js` | Motor puro: presupuestos, chequeos y debrief causal |
+| `src/js/director/evaluar.js` | Motor puro: presupuestos, chequeos y debrief causal (ES/EN) |
+| `src/js/director/i18n.js` | Cadenas de interfaz ES/EN |
 | `src/js/director/vista.js` | UI de selección, barras de uso y ficha verificable |
-| `tests/unit/director.test.js` | Casos de éxito, fallo de masa, destino, Kepler |
+| `tests/unit/director.test.js` | Casos de éxito, fallo de masa, destino, Kepler, idioma |
 
 ## Flujo del jugador
 

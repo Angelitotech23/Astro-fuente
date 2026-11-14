@@ -2,7 +2,7 @@
 //
 // Rutas: #/ · #/sistema-solar · #/historico · #/mision/<id> · #/simulador · #/director · #/fuentes
 
-import { cargarCatalogo } from './datos/supabase.js';
+import { cargarCatalogo, catalogoLocal } from './datos/supabase.js';
 import { vistaInicio } from './vistas/inicio.js';
 import { vistaSistemaSolar } from './vistas/sistema-solar.js';
 import { vistaHistorico, vistaMision } from './vistas/misiones.js';
@@ -10,15 +10,13 @@ import { vistaFuentes } from './vistas/fuentes.js';
 import { vistaSimulador } from './simulador/vista.js';
 import { vistaDirector } from './director/vista.js';
 
-const VACIO = { fuentes: [], misiones: [], datos: [], eventos: [] };
-
 const app = document.getElementById('app');
 const estadoCarga = document.getElementById('estado-carga');
 
-const catalogoPromesa = cargarCatalogo().then(
-  (catalogo) => ({ catalogo, error: null }),
-  (error) => ({ catalogo: VACIO, error }),
-);
+const catalogoPromesa = cargarCatalogo().catch(() => ({
+  catalogo: catalogoLocal(),
+  error: { codigo: 'lectura', message: 'fallback' },
+}));
 
 function rutaActual() {
   const partes = (location.hash || '#/').replace(/^#\/?/, '').split('/').filter(Boolean);
@@ -46,26 +44,38 @@ async function renderizar() {
   if (!fabrica) {
     app.replaceChildren(vistaInicio(catalogo, error));
     document.title = 'Astro-fuente';
+    marcarEnlaceActivo();
+    if (estadoCarga) estadoCarga.hidden = true;
     return;
   }
   app.replaceChildren(fabrica(catalogo, error));
   const titulo = app.querySelector('h1');
   document.title = titulo ? `${titulo.textContent} · Astro-fuente` : 'Astro-fuente';
-  if (titulo) titulo.focus({ preventScroll: false });
+  if (titulo && typeof titulo.focus === 'function') {
+    try {
+      titulo.focus({ preventScroll: true });
+    } catch {
+      /* ignore */
+    }
+  }
   if (estadoCarga) estadoCarga.hidden = true;
+  marcarEnlaceActivo();
 }
 
 function marcarEnlaceActivo() {
-  const actual = `#/${rutaActual().join('/')}`;
+  const partes = rutaActual();
+  const actual = partes.length ? `#/${partes.join('/')}` : '#/';
   document.querySelectorAll('.navegacion a').forEach((a) => {
     const destino = a.getAttribute('href');
-    if (destino === actual || (actual === '#/' && destino === '#/')) a.setAttribute('aria-current', 'page');
+    const mismo = destino === actual
+      || (actual === '#/' && destino === '#/')
+      || (partes[0] === 'mision' && destino === '#/mision/apolo-11' && partes[1]);
+    if (mismo) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');
   });
 }
 
 window.addEventListener('hashchange', () => {
-  marcarEnlaceActivo();
   renderizar();
 });
 

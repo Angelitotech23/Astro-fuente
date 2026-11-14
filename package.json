@@ -5,7 +5,9 @@
   "description": "Simulador web de exploración espacial verificable.",
   "type": "module",
   "scripts": {
-    "test": "node --test tests/unit/*.test.js"
+    "test": "node --test tests/unit/*.test.js",
+    "start": "python3 -m http.server 8080",
+    "serve": "python3 -m http.server 8080"
   },
   "license": "UNLICENSED"
 }

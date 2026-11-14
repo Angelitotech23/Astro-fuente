@@ -16,7 +16,7 @@ export function vistaInicio(catalogo, error) {
   contenedor.append(el('h1', { id: 'titulo-inicio', tabindex: '-1', text: 'Astro-fuente' }));
   contenedor.append(el('p', {
     class: 'lead',
-    text: 'Simulador web de exploración espacial verificable: cada dato muestra su fuente, su fecha de consulta y su estado.',
+    text: 'Verifiable space exploration web simulator / Simulador web de exploración espacial verificable: cada dato muestra su fuente, fecha y estado.',
   }));
   const aviso = avisoDatos(error);
   if (aviso) contenedor.append(aviso);

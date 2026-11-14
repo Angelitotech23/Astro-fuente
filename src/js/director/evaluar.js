@@ -1,5 +1,5 @@
 // Motor puro de evaluación del Director de misión.
-// Entrada: selecciones del jugador. Salida: presupuestos, chequeos y debrief causal.
+// Entrada: selecciones del jugador (+ idioma). Salida: presupuestos, chequeos y debrief causal.
 
 import {
   BUSES,
@@ -8,6 +8,7 @@ import {
   OBJETIVOS,
   ORBITAS,
   buscarPorId,
+  etiqueta,
   periodoOrbitalHoras,
 } from './catalogo.js';
 
@@ -68,7 +69,7 @@ export function presupuestos(resuelto) {
   const capacidadKg = objetivo.destino === 'lunar'
     ? lanzador.capacidadLunarKg
     : lanzador.capacidadLeoKg;
-  const potenciaUsadaW = bus.potenciaW * 0.15 + potenciaInstrumentos; // 15% bus de aviónica
+  const potenciaUsadaW = bus.potenciaW * 0.15 + potenciaInstrumentos;
   const enlaceMbps = bus.antenaMbps * orbita.factorEnlace;
   const costoTotal = bus.costo + costoInstrumentos + lanzador.costo;
   const periodoH = periodoOrbitalHoras(orbita);
@@ -91,11 +92,17 @@ export function presupuestos(resuelto) {
   };
 }
 
+function n(item, lang) {
+  return etiqueta(item, lang, 'nombre');
+}
+
 /**
  * Evalúa compatibilidad y produce un debrief causal ordenado.
  * @param {Seleccion} seleccion
+ * @param {'es'|'en'} [lang='es']
  */
-export function evaluarMision(seleccion) {
+export function evaluarMision(seleccion, lang = 'es') {
+  const en = lang === 'en';
   const resuelto = resolverSeleccion(seleccion);
   if (resuelto.incompleta) {
     return {
@@ -108,7 +115,9 @@ export function evaluarMision(seleccion) {
       causas: [{
         id: 'incompleta',
         severidad: 'bloqueante',
-        mensaje: 'Falta elegir objetivo, bus, al menos un instrumento, lanzador y órbita.',
+        mensaje: en
+          ? 'Pick an objective, bus, at least one instrument, launcher, and orbit.'
+          : 'Falta elegir objetivo, bus, al menos un instrumento, lanzador y órbita.',
       }],
     };
   }
@@ -123,20 +132,32 @@ export function evaluarMision(seleccion) {
   chequeos.push({
     id: 'destino',
     ok: destinoOk,
-    etiqueta: 'Destino compatible',
+    etiqueta: en ? 'Compatible destination' : 'Destino compatible',
     detalle: destinoOk
-      ? `Lanzador y órbita cubren destino «${objetivo.destino}».`
-      : `El objetivo pide «${objetivo.destino}», pero lanzador [${lanzador.destinos.join(', ')}] u órbita «${orbita.destino}» no coinciden.`,
+      ? (en
+        ? `Launcher and orbit cover destination “${objetivo.destino}”.`
+        : `Lanzador y órbita cubren destino «${objetivo.destino}».`)
+      : (en
+        ? `Objective needs “${objetivo.destino}”, but launcher [${lanzador.destinos.join(', ')}] or orbit “${orbita.destino}” do not match.`
+        : `El objetivo pide «${objetivo.destino}», pero lanzador [${lanzador.destinos.join(', ')}] u órbita «${orbita.destino}» no coinciden.`),
   });
   if (!destinoOk) {
     causas.push({
       id: 'destino',
       severidad: 'bloqueante',
-      mensaje: `Incompatibilidad de destino: la misión apunta a ${objetivo.destino}, pero el lanzador o la órbita no llegan ahí.`,
+      mensaje: en
+        ? `Destination mismatch: the mission targets ${objetivo.destino}, but the launcher or orbit cannot get there.`
+        : `Incompatibilidad de destino: la misión apunta a ${objetivo.destino}, pero el lanzador o la órbita no llegan ahí.`,
       cadena: [
-        `Objetivo «${objetivo.nombre}» → destino ${objetivo.destino}`,
-        `Lanzador «${lanzador.nombre}» → [${lanzador.destinos.join(', ')}]`,
-        `Órbita «${orbita.nombre}» → ${orbita.destino}`,
+        en
+          ? `Objective “${n(objetivo, lang)}” → destination ${objetivo.destino}`
+          : `Objetivo «${n(objetivo, lang)}» → destino ${objetivo.destino}`,
+        en
+          ? `Launcher “${n(lanzador, lang)}” → [${lanzador.destinos.join(', ')}]`
+          : `Lanzador «${n(lanzador, lang)}» → [${lanzador.destinos.join(', ')}]`,
+        en
+          ? `Orbit “${n(orbita, lang)}” → ${orbita.destino}`
+          : `Órbita «${n(orbita, lang)}» → ${orbita.destino}`,
       ],
     });
   }
@@ -145,20 +166,32 @@ export function evaluarMision(seleccion) {
   chequeos.push({
     id: 'masa',
     ok: masaOk,
-    etiqueta: 'Masa vs capacidad del lanzador',
-    detalle: `${p.masaTotalKg.toFixed(1)} kg usados / ${p.capacidadKg} kg de capacidad (${objetivo.destino}).`,
+    etiqueta: en ? 'Mass vs launcher capacity' : 'Masa vs capacidad del lanzador',
+    detalle: en
+      ? `${p.masaTotalKg.toFixed(1)} kg used / ${p.capacidadKg} kg capacity (${objetivo.destino}).`
+      : `${p.masaTotalKg.toFixed(1)} kg usados / ${p.capacidadKg} kg de capacidad (${objetivo.destino}).`,
   });
   if (!masaOk) {
     const exceso = p.masaTotalKg - p.capacidadKg;
     causas.push({
       id: 'masa',
       severidad: 'bloqueante',
-      mensaje: `La masa total supera la capacidad del lanzador en ${exceso.toFixed(1)} kg.`,
+      mensaje: en
+        ? `Total mass exceeds launcher capacity by ${exceso.toFixed(1)} kg.`
+        : `La masa total supera la capacidad del lanzador en ${exceso.toFixed(1)} kg.`,
       cadena: [
-        `Bus «${bus.nombre}»: ${bus.masaKg} kg`,
-        `Instrumentos: ${p.masaInstrumentosKg.toFixed(1)} kg`,
-        `Margen de inserción de la órbita: ${p.margenInsercionKg} kg`,
-        `Total ${p.masaTotalKg.toFixed(1)} kg > capacidad ${p.capacidadKg} kg`,
+        en
+          ? `Bus “${n(bus, lang)}”: ${bus.masaKg} kg`
+          : `Bus «${n(bus, lang)}»: ${bus.masaKg} kg`,
+        en
+          ? `Instruments: ${p.masaInstrumentosKg.toFixed(1)} kg`
+          : `Instrumentos: ${p.masaInstrumentosKg.toFixed(1)} kg`,
+        en
+          ? `Orbit insertion margin: ${p.margenInsercionKg} kg`
+          : `Margen de inserción de la órbita: ${p.margenInsercionKg} kg`,
+        en
+          ? `Total ${p.masaTotalKg.toFixed(1)} kg > capacity ${p.capacidadKg} kg`
+          : `Total ${p.masaTotalKg.toFixed(1)} kg > capacidad ${p.capacidadKg} kg`,
       ],
     });
   }
@@ -167,17 +200,23 @@ export function evaluarMision(seleccion) {
   chequeos.push({
     id: 'potencia',
     ok: potenciaOk,
-    etiqueta: 'Potencia',
-    detalle: `${p.potenciaUsadaW.toFixed(1)} W demandados / ${p.potenciaDisponibleW} W del bus.`,
+    etiqueta: en ? 'Power' : 'Potencia',
+    detalle: en
+      ? `${p.potenciaUsadaW.toFixed(1)} W demanded / ${p.potenciaDisponibleW} W from bus.`
+      : `${p.potenciaUsadaW.toFixed(1)} W demandados / ${p.potenciaDisponibleW} W del bus.`,
   });
   if (!potenciaOk) {
     causas.push({
       id: 'potencia',
       severidad: 'bloqueante',
-      mensaje: `La potencia pico de los instrumentos supera la del bus en ${(p.potenciaUsadaW - p.potenciaDisponibleW).toFixed(1)} W.`,
+      mensaje: en
+        ? `Peak instrument power exceeds the bus by ${(p.potenciaUsadaW - p.potenciaDisponibleW).toFixed(1)} W.`
+        : `La potencia pico de los instrumentos supera la del bus en ${(p.potenciaUsadaW - p.potenciaDisponibleW).toFixed(1)} W.`,
       cadena: [
-        `Aviónica del bus (15%): ${(bus.potenciaW * 0.15).toFixed(1)} W`,
-        ...instrumentos.map((i) => `${i.nombre}: ${i.potenciaW} W`),
+        en
+          ? `Bus avionics (15%): ${(bus.potenciaW * 0.15).toFixed(1)} W`
+          : `Aviónica del bus (15%): ${(bus.potenciaW * 0.15).toFixed(1)} W`,
+        ...instrumentos.map((i) => `${n(i, lang)}: ${i.potenciaW} W`),
         `Total ${p.potenciaUsadaW.toFixed(1)} W > ${p.potenciaDisponibleW} W`,
       ],
     });
@@ -189,23 +228,33 @@ export function evaluarMision(seleccion) {
   chequeos.push({
     id: 'datos',
     ok: datosOk,
-    etiqueta: 'Enlace de datos',
-    detalle: `Enlace efectivo ${p.enlaceMbps.toFixed(1)} Mbps · demanda instrumentos ${p.datosDemandadosMbps.toFixed(1)} Mbps · mínimo del objetivo ${objetivo.datosMinMbps} Mbps.`,
+    etiqueta: en ? 'Data link' : 'Enlace de datos',
+    detalle: en
+      ? `Effective link ${p.enlaceMbps.toFixed(1)} Mbps · instrument demand ${p.datosDemandadosMbps.toFixed(1)} Mbps · objective minimum ${objetivo.datosMinMbps} Mbps.`
+      : `Enlace efectivo ${p.enlaceMbps.toFixed(1)} Mbps · demanda instrumentos ${p.datosDemandadosMbps.toFixed(1)} Mbps · mínimo del objetivo ${objetivo.datosMinMbps} Mbps.`,
   });
   if (!datosOk) {
     causas.push({
       id: 'datos',
       severidad: 'bloqueante',
       mensaje: !enlaceCubreObjetivo
-        ? `El enlace (${p.enlaceMbps.toFixed(1)} Mbps) no alcanza el mínimo del objetivo (${objetivo.datosMinMbps} Mbps).`
-        : `El enlace (${p.enlaceMbps.toFixed(1)} Mbps) no cubre el 35% de la demanda de instrumentos (${p.datosDemandadosMbps.toFixed(1)} Mbps).`,
+        ? (en
+          ? `Link (${p.enlaceMbps.toFixed(1)} Mbps) is below the objective minimum (${objetivo.datosMinMbps} Mbps).`
+          : `El enlace (${p.enlaceMbps.toFixed(1)} Mbps) no alcanza el mínimo del objetivo (${objetivo.datosMinMbps} Mbps).`)
+        : (en
+          ? `Link (${p.enlaceMbps.toFixed(1)} Mbps) does not cover 35% of instrument demand (${p.datosDemandadosMbps.toFixed(1)} Mbps).`
+          : `El enlace (${p.enlaceMbps.toFixed(1)} Mbps) no cubre el 35% de la demanda de instrumentos (${p.datosDemandadosMbps.toFixed(1)} Mbps).`),
       cadena: [
-        `Antena del bus: ${bus.antenaMbps} Mbps`,
-        `Factor de enlace de la órbita: ×${orbita.factorEnlace}`,
-        `Enlace efectivo: ${p.enlaceMbps.toFixed(1)} Mbps`,
+        en ? `Bus antenna: ${bus.antenaMbps} Mbps` : `Antena del bus: ${bus.antenaMbps} Mbps`,
+        en ? `Orbit link factor: ×${orbita.factorEnlace}` : `Factor de enlace de la órbita: ×${orbita.factorEnlace}`,
+        en ? `Effective link: ${p.enlaceMbps.toFixed(1)} Mbps` : `Enlace efectivo: ${p.enlaceMbps.toFixed(1)} Mbps`,
         !enlaceCubreDemanda
-          ? `Instrumentos piden ${p.datosDemandadosMbps.toFixed(1)} Mbps (umbral operativo 35%)`
-          : `Objetivo exige ≥ ${objetivo.datosMinMbps} Mbps`,
+          ? (en
+            ? `Instruments need ${p.datosDemandadosMbps.toFixed(1)} Mbps (35% operating threshold)`
+            : `Instrumentos piden ${p.datosDemandadosMbps.toFixed(1)} Mbps (umbral operativo 35%)`)
+          : (en
+            ? `Objective requires ≥ ${objetivo.datosMinMbps} Mbps`
+            : `Objetivo exige ≥ ${objetivo.datosMinMbps} Mbps`),
       ],
     });
   }
@@ -214,39 +263,50 @@ export function evaluarMision(seleccion) {
   chequeos.push({
     id: 'presupuesto',
     ok: costoOk,
-    etiqueta: 'Presupuesto',
-    detalle: `${p.costoTotal} unidades usadas / ${p.presupuesto} disponibles.`,
+    etiqueta: en ? 'Budget' : 'Presupuesto',
+    detalle: en
+      ? `${p.costoTotal} units used / ${p.presupuesto} available.`
+      : `${p.costoTotal} unidades usadas / ${p.presupuesto} disponibles.`,
   });
   if (!costoOk) {
     causas.push({
       id: 'presupuesto',
       severidad: 'bloqueante',
-      mensaje: `El costo (${p.costoTotal}) supera el presupuesto (${p.presupuesto}).`,
+      mensaje: en
+        ? `Cost (${p.costoTotal}) exceeds budget (${p.presupuesto}).`
+        : `El costo (${p.costoTotal}) supera el presupuesto (${p.presupuesto}).`,
       cadena: [
-        `Bus: ${bus.costo}`,
-        `Instrumentos: ${sumar(instrumentos, 'costo')}`,
-        `Lanzador: ${lanzador.costo}`,
+        en ? `Bus: ${bus.costo}` : `Bus: ${bus.costo}`,
+        en ? `Instruments: ${sumar(instrumentos, 'costo')}` : `Instrumentos: ${sumar(instrumentos, 'costo')}`,
+        en ? `Launcher: ${lanzador.costo}` : `Lanzador: ${lanzador.costo}`,
         `Total ${p.costoTotal} > ${p.presupuesto}`,
       ],
     });
   }
 
-  // La órbita debe sostener al menos el 75% de la duración pedida por el objetivo.
   const duracionSuficiente = orbita.duracionUtilDias >= objetivo.duracionMaxDias * 0.75;
   chequeos.push({
     id: 'duracion',
     ok: duracionSuficiente,
-    etiqueta: 'Duración útil de la órbita',
-    detalle: `${orbita.duracionUtilDias} días útiles / objetivo ${objetivo.duracionMaxDias} días (umbral 75%).`,
+    etiqueta: en ? 'Useful orbit duration' : 'Duración útil de la órbita',
+    detalle: en
+      ? `${orbita.duracionUtilDias} useful days / objective ${objetivo.duracionMaxDias} days (75% threshold).`
+      : `${orbita.duracionUtilDias} días útiles / objetivo ${objetivo.duracionMaxDias} días (umbral 75%).`,
   });
   if (!duracionSuficiente) {
     causas.push({
       id: 'duracion',
       severidad: 'bloqueante',
-      mensaje: `La órbita solo ofrece ${orbita.duracionUtilDias} días útiles; el objetivo pide ${objetivo.duracionMaxDias} días.`,
+      mensaje: en
+        ? `Orbit only offers ${orbita.duracionUtilDias} useful days; objective asks for ${objetivo.duracionMaxDias} days.`
+        : `La órbita solo ofrece ${orbita.duracionUtilDias} días útiles; el objetivo pide ${objetivo.duracionMaxDias} días.`,
       cadena: [
-        `Órbita «${orbita.nombre}»: ${orbita.duracionUtilDias} días`,
-        `Objetivo «${objetivo.nombre}»: ${objetivo.duracionMaxDias} días`,
+        en
+          ? `Orbit “${n(orbita, lang)}”: ${orbita.duracionUtilDias} days`
+          : `Órbita «${n(orbita, lang)}»: ${orbita.duracionUtilDias} días`,
+        en
+          ? `Objective “${n(objetivo, lang)}”: ${objetivo.duracionMaxDias} days`
+          : `Objetivo «${n(objetivo, lang)}»: ${objetivo.duracionMaxDias} días`,
       ],
     });
   }
@@ -255,41 +315,48 @@ export function evaluarMision(seleccion) {
   chequeos.push({
     id: 'ciencia',
     ok: cienciaOk,
-    etiqueta: 'Retorno científico',
-    detalle: `${p.ciencia} puntos / mínimo ${objetivo.cienciaMin}.`,
+    etiqueta: en ? 'Science return' : 'Retorno científico',
+    detalle: en
+      ? `${p.ciencia} points / minimum ${objetivo.cienciaMin}.`
+      : `${p.ciencia} puntos / mínimo ${objetivo.cienciaMin}.`,
   });
   if (!cienciaOk) {
     causas.push({
       id: 'ciencia',
       severidad: 'bloqueante',
-      mensaje: `La carga científica (${p.ciencia}) no llega al mínimo del objetivo (${objetivo.cienciaMin}).`,
-      cadena: instrumentos.map((i) => `${i.nombre}: +${i.ciencia}`),
+      mensaje: en
+        ? `Science payload (${p.ciencia}) is below the objective minimum (${objetivo.cienciaMin}).`
+        : `La carga científica (${p.ciencia}) no llega al mínimo del objetivo (${objetivo.cienciaMin}).`,
+      cadena: instrumentos.map((i) => `${n(i, lang)}: +${i.ciencia}`),
     });
   }
 
-  // Penalización suave: imagen hires en órbita alta pierde resolución de superficie.
   if (instrumentos.some((i) => i.etiquetas.includes('hires')) && orbita.id === 'lunar-alta') {
     causas.push({
       id: 'resolucion',
       severidad: 'aviso',
-      mensaje: 'La imagen de alta resolución en órbita lunar alta degrada la resolución de superficie.',
+      mensaje: en
+        ? 'High-resolution imaging from a high lunar orbit degrades surface resolution.'
+        : 'La imagen de alta resolución en órbita lunar alta degrada la resolución de superficie.',
       cadena: [
-        'Instrumento con etiqueta hires seleccionado',
-        'Órbita a 1000 km → peor escala espacial',
+        en ? 'Instrument tagged hires selected' : 'Instrumento con etiqueta hires seleccionado',
+        en ? 'Orbit at 1000 km → worse spatial scale' : 'Órbita a 1000 km → peor escala espacial',
       ],
     });
     chequeos.push({
       id: 'resolucion',
       ok: false,
-      etiqueta: 'Resolución de imagen',
-      detalle: 'Aviso: hires + órbita alta reduce valor cartográfico.',
+      etiqueta: en ? 'Imaging resolution' : 'Resolución de imagen',
+      detalle: en
+        ? 'Warning: hires + high orbit reduces mapping value.'
+        : 'Aviso: hires + órbita alta reduce valor cartográfico.',
     });
   } else {
     chequeos.push({
       id: 'resolucion',
       ok: true,
-      etiqueta: 'Resolución de imagen',
-      detalle: 'Sin conflicto de resolución detectado.',
+      etiqueta: en ? 'Imaging resolution' : 'Resolución de imagen',
+      detalle: en ? 'No resolution conflict detected.' : 'Sin conflicto de resolución detectado.',
     });
   }
 

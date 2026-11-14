@@ -9,6 +9,9 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 ### Cambiado
 
 - README principal bilingüe (English + Español), alineado con Space Apps 2026.
+- Director de misión con conmutador ES/EN, presets viable/fallo, selección resaltada y barra de ciencia.
+- Catálogo de fuentes local cuando Supabase no está configurado (`#/fuentes` ya no queda vacío).
+- Navegación con Director primero; meta/footer bilingües.
 
 ### Añadido
 

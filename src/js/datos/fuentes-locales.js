@@ -1,0 +1,75 @@
+// Catálogo local de fuentes (espejo de la semilla SQL / docs/fuentes.md).
+// Se usa cuando Supabase no está configurado, para que #/fuentes no quede vacío.
+
+export const FUENTES_LOCALES = Object.freeze([
+  {
+    id: 'F-NASA-HO',
+    nombre: 'NASA History Office',
+    url: 'https://www.nasa.gov/history/',
+    clase: 'primaria',
+    notas: 'No consultada: acceso bloqueado por la política de red del 2026-11-14. Pendiente de lectura.',
+  },
+  {
+    id: 'F-WTOP',
+    nombre: 'WTOP',
+    url: 'https://wtop.com/national/2026/04/artemis-iis-grand-moon-finale-is-almost-here-with-a-pacific-splashdown-to-cap-nasas-lunar-comeback/',
+    clase: 'secundaria',
+    notas: 'Medio de noticias. Solo para datos pendientes de verificación.',
+  },
+  {
+    id: 'F-NTD',
+    nombre: 'NTD',
+    url: 'https://www.ntd.com/artemis-ii-mission-ends-with-splashdown-off-san-diego_1137976.html',
+    clase: 'secundaria',
+    notas: 'Medio de noticias. Solo para datos pendientes de verificación.',
+  },
+  {
+    id: 'F-BOEING',
+    nombre: 'Boeing',
+    url: 'https://www.boeing.com/features/2026/04/artemis-ii-crew-back-on-earth-after-historic-lunar-flyby',
+    clase: 'secundaria',
+    notas: 'Contratista de NASA, no es fuente primaria de la agencia.',
+  },
+  {
+    id: 'F-SPO',
+    nombre: 'SpacePolicyOnline',
+    url: 'https://spacepolicyonline.com/news/nasa-is-full-steam-ahead-on-artemis-iii-iv-and-v/',
+    clase: 'secundaria',
+    notas: 'Fechas de Artemis III a V. Hay conflicto entre fuentes sobre Artemis III.',
+  },
+  {
+    id: 'F-STARLUST-A',
+    nombre: 'Starlust (Artemis III)',
+    url: 'https://starlust.org/nas-as-artemis-iii-new-date-goal-and-everything-else-you-need-to-know/',
+    clase: 'secundaria',
+    notas: 'Fecha de Artemis III. Conflicto con otras fuentes.',
+  },
+  {
+    id: 'F-STARLUST-B',
+    nombre: 'Starlust (Artemis IV y V)',
+    url: 'https://starlust.org/heres-what-nasa-is-planning-for-artemis-iv-and-v-now-that-the-roadmap-to-the-moon-has-been-revised/',
+    clase: 'secundaria',
+    notas: 'Previsiones de Artemis IV y V.',
+  },
+  {
+    id: 'F-IFS',
+    nombre: 'IFLScience',
+    url: 'https://www.iflscience.com/artemis-iii-has-already-been-pushed-back-to-late-2027-just-2-months-after-nasa-announced-ambitious-new-moon-plan-83377',
+    clase: 'secundaria',
+    notas: 'Indica finales de 2027 para Artemis III. Conflicto con otras fuentes.',
+  },
+  {
+    id: 'F-HORIZONS',
+    nombre: 'JPL Horizons System',
+    url: 'https://ssd.jpl.nasa.gov/horizons/',
+    clase: 'primaria',
+    notas: 'Referencia del método de efemérides. El periodo orbital del juego se calcula con Kepler, no se consulta Horizons en vivo en el MVP.',
+  },
+  {
+    id: 'F-AF-DIR',
+    nombre: 'Astro-fuente · modelo didáctico del Director',
+    url: 'https://github.com/Angelitotech23/Astro-fuente',
+    clase: 'secundaria',
+    notas: 'Valores de masa, potencia, costo y enlace de datos del juego. Estimados educativos, no fichas oficiales de vuelo.',
+  },
+]);

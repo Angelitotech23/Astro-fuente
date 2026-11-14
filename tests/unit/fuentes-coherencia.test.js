@@ -78,3 +78,23 @@ test('todo ID de fuente citado en la semilla de datos existe en el catálogo', (
   const citados = [...sql.matchAll(/'(F-[A-Z0-9-]+)'/g)].map((m) => m[1]);
   for (const c of citados) assert.ok(ids.has(c), `fuente citada sin registrar: ${c}`);
 });
+
+test('fuentes-locales.js coincide con la semilla SQL (ids)', async () => {
+  const { FUENTES_LOCALES } = await import('../../src/js/datos/fuentes-locales.js');
+  const sqlIds = leerFuentesDeSemilla().map((f) => f.id).sort();
+  const localIds = FUENTES_LOCALES.map((f) => f.id).sort();
+  assert.deepEqual(localIds, sqlIds);
+});
+
+test('fuentes-locales.js coincide nombre/url/clase/notas con la semilla', async () => {
+  const { FUENTES_LOCALES } = await import('../../src/js/datos/fuentes-locales.js');
+  const sql = new Map(leerFuentesDeSemilla().map((f) => [f.id, f]));
+  for (const f of FUENTES_LOCALES) {
+    const s = sql.get(f.id);
+    assert.ok(s, f.id);
+    assert.equal(f.nombre, s.nombre, `nombre ${f.id}`);
+    assert.equal(f.url, s.url, `url ${f.id}`);
+    assert.equal(f.clase, s.clase, `clase ${f.id}`);
+    assert.equal(f.notas, s.notas, `notas ${f.id}`);
+  }
+});
