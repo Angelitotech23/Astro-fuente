@@ -2,7 +2,7 @@
 //
 // Rutas: #/ · #/sistema-solar · #/historico · #/mision/<id> · #/simulador · #/director · #/fuentes
 
-import { cargarCatalogo, catalogoLocal } from './datos/supabase.js';
+import { ErrorDatos, cargarCatalogo, catalogoLocal } from './datos/supabase.js';
 import { vistaInicio } from './vistas/inicio.js';
 import { vistaSistemaSolar } from './vistas/sistema-solar.js';
 import { vistaHistorico, vistaMision } from './vistas/misiones.js';
@@ -15,7 +15,7 @@ const estadoCarga = document.getElementById('estado-carga');
 
 const catalogoPromesa = cargarCatalogo().catch(() => ({
   catalogo: catalogoLocal(),
-  error: { codigo: 'lectura', message: 'fallback' },
+  error: new ErrorDatos('lectura', 'No se pudo cargar el catálogo.'),
 }));
 
 function rutaActual() {
@@ -76,6 +76,8 @@ function marcarEnlaceActivo() {
 }
 
 window.addEventListener('hashchange', () => {
+  // Enlaces de ancla como #contenido (skip link) no son rutas: no re-renderizar.
+  if (location.hash && !location.hash.startsWith('#/')) return;
   renderizar();
 });
 

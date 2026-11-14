@@ -38,11 +38,15 @@ function obtenerCliente() {
     throw new ErrorDatos('sin_configuracion', 'Falta la URL y la clave publicable en src/js/config.js.');
   }
   if (!clientePromesa) {
-    clientePromesa = import(URL_SDK).then(({ createClient }) =>
-      createClient(CONFIG.supabaseUrl, CONFIG.supabasePublishableKey, {
+    clientePromesa = import(URL_SDK)
+      .then(({ createClient }) => createClient(CONFIG.supabaseUrl, CONFIG.supabasePublishableKey, {
         auth: { persistSession: false },
-      }),
-    );
+      }))
+      .catch((causa) => {
+        // Permite reintentar en la siguiente carga en lugar de quedar fijo en error.
+        clientePromesa = null;
+        throw new ErrorDatos('lectura', `No se pudo cargar supabase-js: ${causa.message}`);
+      });
   }
   return clientePromesa;
 }

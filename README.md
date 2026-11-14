@@ -1,11 +1,11 @@
 # Astro-fuente
 
-**EN** · Verifiable web simulator for space exploration: every value shows its source, retrieval date, and verification status. Built for the **NASA Space Apps Challenge 2026** challenge *Space Mission Design Game*.
+**EN** · A verifiable web simulator for space exploration. Every value shows its source, retrieval date, and verification status. Built for the **NASA Space Apps Challenge 2026**, challenge *Space Mission Design Game*.
 
-**ES** · Simulador web de exploración espacial **verificable**: cada dato muestra su fuente, fecha de consulta y estado. Desarrollado para el **NASA Space Apps Challenge 2026** (reto *Space Mission Design Game*).
+**ES** · Simulador web de exploración espacial **verificable**. Cada dato muestra su fuente, su fecha de consulta y su estado. Desarrollado para el **NASA Space Apps Challenge 2026**, reto *Space Mission Design Game*.
 
-> Independent project — not affiliated with NASA or any other agency or company mentioned.  
-> Proyecto independiente — sin afiliación con la NASA ni con otras agencias o empresas mencionadas.
+> **Independent project.** Not affiliated with, endorsed by, or sponsored by NASA or any other agency or company mentioned.
+> **Proyecto independiente.** Sin afiliación, respaldo ni patrocinio de la NASA ni de otras agencias o empresas mencionadas.
 
 ---
 
@@ -13,56 +13,72 @@
 
 ### What it is
 
-Astro-fuente is a static web app that combines:
+A static web app (no build step) with five modules:
 
-- **Mission Director** (`#/director`) — interactive mission-design game with trade-offs (objective, bus, instruments, launcher, orbit) and a causal debrief; every quantity cites a source and assumptions.
-- **Solar system viewer** — navigable 2D overview (data pending primary verification).
-- **Apollo / Artemis history** — timeline and schematic trajectories for Apollo 11 and Artemis II.
-- **Flight simulator** — single-phase rocket model with visible formulas and assumptions.
-- **Sources registry** — human-readable catalog of every cited source.
+| Module | Route | What it does |
+| --- | --- | --- |
+| Mission Director | `#/director` | Mission-design game: pick objective, bus, instruments, launcher and orbit. Each choice has trade-offs and a causal debrief. |
+| Solar system | `#/sistema-solar` | Navigable 2D schematic. Orbits are not to scale; values are pending verification. |
+| History | `#/historico` | Apollo 1–17 and Artemis II timeline. Dates are pending verification. |
+| Trajectories | `#/mision/apolo-11`, `#/mision/artemis-ii` | Schematic Earth–Moon–Earth paths, without figures. |
+| Flight simulator | `#/simulador` | One-phase vertical rocket model with visible formulas and assumptions. |
+| Sources | `#/fuentes` | Readable registry of every cited source. |
 
 ### Principles
 
 | Principle | In practice |
 | --- | --- |
-| **Verifiability** | Every datum includes source, retrieval date, and status (`verified`, `pending`, `outdated`). |
-| **Transparent math** | Simulator formulas are shown next to the result. |
-| **Independence** | Not affiliated with or endorsed by NASA. |
-| **Facts vs opinion** | Critical commentary is labeled and backed by public sources. |
+| **Verifiability** | Every datum has a source, a retrieval date, and a status: `verificado`, `pendiente`, or `desactualizado`. Unsourced "verified" data is downgraded to "pending". |
+| **Transparent math** | Simulator formulas appear next to their results, with their assumptions. |
+| **No invented numbers** | Data without a checked primary source shows no figure. |
+| **Independence** | Not affiliated with NASA. |
 
-### Project status
+### Status
 
 | Module | Status |
 | --- | --- |
 | Mission Director | Playable MVP |
-| Solar system | MVP (2D; values pending verification) |
-| Apollo 1–17 & Artemis II | MVP (pending dates; schematic paths) |
-| Flight simulator | MVP (single phase) |
-| Future programs / news | Not in MVP |
-| Supabase + Vercel deploy | Documented, not created yet |
+| Solar system | MVP, 2D; values pending |
+| History and trajectories | MVP; dates pending, schematic paths |
+| Flight simulator | MVP, single phase |
+| Supabase backend | Schema and seed written; project not created yet |
+| Vercel deploy | Documented; not created yet |
 
 ### Run locally
 
-No build step. Serve the repo root:
+No build step. Serve the repository root and open the app in a browser.
 
 ```bash
+# macOS / Linux
 python3 -m http.server 8080
+
+# Windows
+py -m http.server 8080
 ```
 
-Open `http://localhost:8080` (try `#/director`). Without a database, the app still runs and marks data as pending.
+Then open `http://localhost:8080/#/director`. Without a database the app still works and marks data as pending.
+
+### Tests
 
 ```bash
 npm test
 ```
 
-### Docs (mostly Spanish for the team)
+The tests cover the physics model against analytic references, the verifiability rules, and the consistency between the source catalog in the docs, the SQL seed, and the local fallback. Tests need Node 22 or later and no dependencies.
 
-- [`docs/reto-space-mission-design-game.md`](docs/reto-space-mission-design-game.md) — challenge mapping
-- [`docs/director-mision.md`](docs/director-mision.md) — Mission Director rules
-- [`docs/despliegue.md`](docs/despliegue.md) — future Vercel / Supabase deploy
-- [`docs/fuentes.md`](docs/fuentes.md) — sources registry
-- [`docs/contexto-proyecto.md`](docs/contexto-proyecto.md) — full project context
-- [`CONTRIBUTING.md`](CONTRIBUTING.md) — contribution guide
+### Documentation
+
+- [`docs/reto-space-mission-design-game.md`](docs/reto-space-mission-design-game.md): challenge mapping
+- [`docs/director-mision.md`](docs/director-mision.md): Mission Director rules
+- [`docs/fuentes.md`](docs/fuentes.md): source registry
+- [`docs/despliegue.md`](docs/despliegue.md): Vercel and Supabase deploy steps
+- [`docs/decisiones.md`](docs/decisiones.md): design decisions
+- [`docs/contexto-proyecto.md`](docs/contexto-proyecto.md): full project context
+- [`CONTRIBUTING.md`](CONTRIBUTING.md): contribution guide
+
+### Security
+
+Never commit keys, tokens, private keys, or `.env` files. CI fails if one is tracked. [`.env.example`](.env.example) is a template only. Public Supabase values, when they exist, go in `src/js/config.js`. Never put a `service_role` key in the repository.
 
 ### License
 
@@ -74,60 +90,72 @@ To be defined by the team.
 
 ### Qué es
 
-Astro-fuente es una aplicación web estática que reúne:
+Aplicación web estática (sin paso de compilación) con seis módulos:
 
-- **Director de misión** (`#/director`) — juego de diseño de misión con trade-offs (objetivo, bus, instrumentos, lanzador, órbita) y debrief causal; cada magnitud cita fuente y supuestos.
-- **Visor del sistema solar** — vista 2D navegable (datos pendientes de verificación primaria).
-- **Histórico Apolo / Artemis** — línea de tiempo y trayectorias esquemáticas de Apolo 11 y Artemis II.
-- **Simulador de vuelo** — modelo de una fase con fórmulas y supuestos visibles.
-- **Registro de fuentes** — catálogo legible de cada fuente citada.
+| Módulo | Ruta | Qué hace |
+| --- | --- | --- |
+| Director de misión | `#/director` | Juego de diseño de misión: elige objetivo, bus, instrumentos, lanzador y órbita. Cada elección tiene compromisos y un debrief causal. |
+| Sistema solar | `#/sistema-solar` | Esquema 2D navegable. Las órbitas no están a escala; los valores están pendientes de verificación. |
+| Histórico | `#/historico` | Línea de tiempo de Apolo 1 a 17 y Artemis II. Las fechas están pendientes de verificación. |
+| Trayectorias | `#/mision/apolo-11`, `#/mision/artemis-ii` | Trayectorias Tierra–Luna–Tierra esquemáticas, sin cifras. |
+| Simulador de vuelo | `#/simulador` | Modelo vertical de una fase con fórmulas y supuestos visibles. |
+| Fuentes | `#/fuentes` | Registro legible de cada fuente citada. |
 
 ### Principios
 
 | Principio | En la práctica |
 | --- | --- |
-| **Verificabilidad** | Todo dato incluye fuente, fecha de consulta y estado (`verificado`, `pendiente`, `desactualizado`). |
-| **Transparencia del cálculo** | Las fórmulas del simulador se muestran junto al resultado. |
-| **Independencia** | El proyecto no está afiliado ni respaldado por la NASA. |
-| **Hechos vs opinión** | Las valoraciones críticas se etiquetan y se apoyan en fuentes públicas. |
+| **Verificabilidad** | Cada dato tiene fuente, fecha de consulta y estado: `verificado`, `pendiente` o `desactualizado`. Un dato "verificado" sin fuente se degrada a "pendiente". |
+| **Cálculo transparente** | Las fórmulas del simulador se muestran junto al resultado, con sus supuestos. |
+| **Sin cifras inventadas** | Un dato sin fuente primaria comprobada no muestra cifra. |
+| **Independencia** | Sin afiliación con la NASA. |
 
-### Estado del proyecto
+### Estado
 
 | Módulo | Estado |
 | --- | --- |
 | Director de misión | MVP jugable |
-| Sistema solar | MVP (2D; valores pendientes) |
-| Apolo 1–17 y Artemis II | MVP (fechas pendientes; esquemas) |
-| Simulador de vuelo | MVP (fase única) |
-| Programas futuros / noticias | Fuera del MVP |
-| Despliegue Supabase + Vercel | Documentado; aún no creado |
+| Sistema solar | MVP, 2D; valores pendientes |
+| Histórico y trayectorias | MVP; fechas pendientes, trayectorias esquemáticas |
+| Simulador de vuelo | MVP, fase única |
+| Backend Supabase | Esquema y semilla escritos; proyecto aún no creado |
+| Despliegue en Vercel | Documentado; aún no creado |
 
 ### Ejecutar en local
 
-Sin paso de compilación. Sirve la raíz del repositorio:
+Sirve la raíz del repositorio y abre el navegador.
 
 ```bash
+# macOS / Linux
 python3 -m http.server 8080
+
+# Windows
+py -m http.server 8080
 ```
 
-Abre `http://localhost:8080` (prueba `#/director`). Sin base de datos, la app funciona y marca los datos como pendientes.
+Luego abre `http://localhost:8080/#/director`. Sin base de datos, la app funciona y marca los datos como pendientes.
+
+### Pruebas
 
 ```bash
 npm test
 ```
 
+Las pruebas cubren el modelo físico frente a referencias analíticas, las reglas de verificabilidad y la coherencia entre el catálogo de fuentes de la documentación, la semilla SQL y el respaldo local. Requieren Node 22 o superior y no tienen dependencias.
+
 ### Documentación
 
-- [`docs/reto-space-mission-design-game.md`](docs/reto-space-mission-design-game.md) — mapeo al reto Space Apps
-- [`docs/director-mision.md`](docs/director-mision.md) — reglas del Director
-- [`docs/despliegue.md`](docs/despliegue.md) — despliegue futuro en Vercel / Supabase
-- [`docs/fuentes.md`](docs/fuentes.md) — registro de fuentes
-- [`docs/contexto-proyecto.md`](docs/contexto-proyecto.md) — contexto completo
-- [`CONTRIBUTING.md`](CONTRIBUTING.md) — guía de contribución
+- [`docs/reto-space-mission-design-game.md`](docs/reto-space-mission-design-game.md): mapeo al reto
+- [`docs/director-mision.md`](docs/director-mision.md): reglas del Director
+- [`docs/fuentes.md`](docs/fuentes.md): registro de fuentes
+- [`docs/despliegue.md`](docs/despliegue.md): pasos de despliegue en Vercel y Supabase
+- [`docs/decisiones.md`](docs/decisiones.md): decisiones de diseño
+- [`docs/contexto-proyecto.md`](docs/contexto-proyecto.md): contexto completo del proyecto
+- [`CONTRIBUTING.md`](CONTRIBUTING.md): guía de contribución
 
 ### Seguridad
 
-No subir claves, tokens ni archivos `.env`. Usa [`.env.example`](.env.example) solo como plantilla. Los valores públicos de Supabase viven en `src/js/config.js` cuando existan.
+No subir claves, tokens, claves privadas ni archivos `.env`. La CI falla si alguno está versionado. [`.env.example`](.env.example) es solo una plantilla. Los valores públicos de Supabase, cuando existan, van en `src/js/config.js`. Nunca pongas la clave `service_role` en el repositorio.
 
 ### Licencia
 
@@ -135,16 +163,20 @@ Pendiente de definir por el equipo.
 
 ---
 
-## Repository layout / Estructura
+## Estructura del repositorio / Repository layout
 
 ```text
 .
-├── index.html            Entry point (no build) / Punto de entrada
-├── vercel.json           Static deploy hints / Pistas de despliegue
-├── src/js/director/      Mission Director / Director de misión
-├── src/js/simulador/     Flight model / Modelo de vuelo
-├── src/js/componentes/   Verifiability widget / Componente dato
-├── docs/                 Challenge, sources, deploy notes
-├── supabase/migrations/  Schema + seed (optional backend)
-└── tests/unit/           Node tests (`npm test`)
+├── index.html             Punto de entrada (sin build) / Entry point
+├── vercel.json            Cabeceras de despliegue estático / Static deploy headers
+├── src/js/app.js          Enrutador por hash / Hash router
+├── src/js/director/       Director de misión: catálogo, evaluación, vista
+├── src/js/simulador/      Modelo de vuelo, integrador RK4, vista
+├── src/js/vistas/         Vistas: inicio, sistema solar, histórico, fuentes
+├── src/js/componentes/    Componente `dato` (verificabilidad)
+├── src/js/datos/          Cliente Supabase de solo lectura y respaldo local
+├── supabase/migrations/   Esquema, RLS y semilla / Schema, RLS and seed
+├── tests/unit/            Pruebas de Node (`npm test`)
+├── tests/db/              Pruebas SQL de restricciones / SQL constraint checks
+└── docs/                  Reto, fuentes, decisiones, despliegue
 ```

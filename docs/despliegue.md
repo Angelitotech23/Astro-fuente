@@ -10,10 +10,10 @@ Cuando el equipo confirme:
 2. Framework Preset: **Other**.
 3. Build Command: vacío.
 4. Output Directory: vacío (raíz del repo; `index.html` en la raíz).
-5. Install Command: vacío (o `npm ci` solo si se quieren correr tests en CI de Vercel; no es necesario para servir).
+5. Install Command: vacío. El sitio no tiene dependencias en tiempo de ejecución; `npm test` solo es necesario en CI.
 6. Root Directory: `.`
 
-El archivo [`vercel.json`](../vercel.json) fija cabeceras básicas y reescritura suave hacia `index.html` para rutas inexistentes (la app navega por hash, así que la raíz basta).
+El archivo [`vercel.json`](../vercel.json) fija cabeceras de seguridad básicas (`X-Content-Type-Options`, `Referrer-Policy`) y `cleanUrls`. No hay reescrituras: la app navega por hash (`#/...`), así que la raíz basta.
 
 Criterio de verificación posterior: la preview responde **200** en `/` y carga `#/director` sin errores de consola.
 
@@ -34,7 +34,7 @@ Ver [`.env.example`](../.env.example). En producción estática los valores púb
 
 ```bash
 npm test
-python3 -m http.server 8080
+python3 -m http.server 8080      # Windows: py -m http.server 8080
 # Abrir http://localhost:8080/#/director
 ```
 
