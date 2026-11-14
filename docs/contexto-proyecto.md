@@ -53,8 +53,8 @@ El proyecto se presenta al **NASA Art Space Challenge**. Es independiente y no t
 | Componente | Descripción |
 |---|---|
 | Visor del sistema solar y la galaxia | Sistema solar, galaxias cercanas y Vía Láctea. |
-| Misiones pasadas | Apolo 11 y Artemis II, con trayectorias reales. |
-| Misiones futuras | Artemis III, IV y V, según los planes públicos. |
+| Misiones pasadas (histórico) | Programa Apolo completo (Apolo 1 a 17) y Artemis I y II. Visor detallado con trayectoria real para Apolo 11 y Artemis II. Registro de cada misión en [`fuentes.md`](fuentes.md). |
+| Misiones futuras | Artemis III, IV y V, según los planes públicos de NASA. Estado al 2026-11-14 en [`fuentes.md`](fuentes.md) (datos secundarios, pendientes de verificación). |
 | Plan de SpaceX | Cohetes y Marte, con enfoque crítico. |
 | Simulador de vuelo | Construcción de cohete, despegue y aterrizaje. |
 | Noticias y satélites | Eventos recientes y satélites (Starlink, comunicaciones desde satélite). |
