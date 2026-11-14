@@ -42,6 +42,7 @@ El seguimiento de tareas se realiza en la pestaña **Issues** del repositorio.
 
 ## Documentación
 
+- [`docs/contexto-proyecto.md`](docs/contexto-proyecto.md): contexto, alcance, módulos, decisiones y riesgos del proyecto.
 - [`CONTRIBUTING.md`](CONTRIBUTING.md): cómo contribuir, convenciones de ramas, commits y revisión.
 - [`docs/fuentes.md`](docs/fuentes.md): registro de fuentes y estado de cada dato.
 
