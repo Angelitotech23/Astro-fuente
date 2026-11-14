@@ -34,6 +34,9 @@ Tabla de fuentes que la base de datos conoce (tabla `fuentes`). Cada fila debe c
 | F-IFS | IFLScience | <https://www.iflscience.com/artemis-iii-has-already-been-pushed-back-to-late-2027-just-2-months-after-nasa-announced-ambitious-new-moon-plan-83377> | secundaria | Indica finales de 2027 para Artemis III. Conflicto con otras fuentes. |
 | F-HORIZONS | JPL Horizons System | <https://ssd.jpl.nasa.gov/horizons/> | primaria | Referencia del método de efemérides. El periodo orbital del juego se calcula con Kepler, no se consulta Horizons en vivo en el MVP. |
 | F-AF-DIR | Astro-fuente · modelo didáctico del Director | <https://github.com/Angelitotech23/Astro-fuente> | secundaria | Valores de masa, potencia, costo y enlace de datos del juego. Estimados educativos, no fichas oficiales de vuelo. |
+| F-NSSDC-EARTH | NASA NSSDC Earth Fact Sheet | <https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html> | primaria | Ficha planetaria de la Tierra (radio, atmósfera, campo magnético, núcleo). Consultada el 2026-11-14. |
+| F-NSSDC-MOON | NASA NSSDC Moon Fact Sheet | <https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html> | primaria | Ficha de la Luna (radio, gravedad superficial, semieje). Consultada el 2026-11-14. |
+| F-NIST-G0 | NIST CODATA · standard acceleration of gravity | <https://physics.nist.gov/cgi-bin/cuu/Value?gn> | primaria | g₀ = 9,80665 m/s² (exacto). Consultada el 2026-11-14. |
 
 ## Registro
 
@@ -79,7 +82,25 @@ Todos los valores están **pendientes**: no se han leído fuentes primarias. Se 
 
 | ID | Dato | Valor | Unidad | Fuente | Fecha de consulta | Estado | Notas |
 |---|---|---|---|---|---|---|---|
-| — | Sin datos verificados todavía | — | — | — | — | — | Completar con fuentes primarias antes de la primera versión pública |
+| TIERRA-RADIO-VOL | Radio volumétrico medio de la Tierra | 6371.000 | km | F-NSSDC-EARTH | 2026-11-14 | `verificado` | NSSDC Earth Fact Sheet |
+| TIERRA-NUCLEO-RADIO | Radio del núcleo terrestre | 3485 | km | F-NSSDC-EARTH | 2026-11-14 | `verificado` | Estructura interna (módulo A) |
+| TIERRA-MANTO-ESPESOR | Espesor del manto | — | km | — | — | `pendiente` | No figura como cifra única en F-NSSDC-EARTH |
+| TIERRA-CORTEZA-ESPESOR | Espesor de la corteza | — | km | — | — | `pendiente` | No figura en F-NSSDC-EARTH |
+| TIERRA-ATM-PRESION | Presión atmosférica superficial | 1014 | mb | F-NSSDC-EARTH | 2026-11-14 | `verificado` | |
+| TIERRA-ATM-ESCALA | Altura de escala atmosférica | 8.5 | km | F-NSSDC-EARTH | 2026-11-14 | `verificado` | |
+| TIERRA-ATM-N2 | N₂ en aire seco (por volumen) | 78.08 | % | F-NSSDC-EARTH | 2026-11-14 | `verificado` | |
+| TIERRA-ATM-O2 | O₂ en aire seco (por volumen) | 20.95 | % | F-NSSDC-EARTH | 2026-11-14 | `verificado` | |
+| TIERRA-MAG-DIPOLO | Intensidad del dipolo geomagnético | 0.306 | Gauss·Re³ | F-NSSDC-EARTH | 2026-11-14 | `verificado` | Modelo GSFC-1283 en la ficha |
+| TIERRA-MAG-SUPERFICIE | Campo en superficie (1 Re) | 0.24–0.66 | Gauss | F-NSSDC-EARTH | 2026-11-14 | `verificado` | Rango, no un solo valor |
+| TIERRA-G-MEDIA | Gravedad superficial media | 9.820 | m/s² | F-NSSDC-EARTH | 2026-11-14 | `verificado` | Distinta de g₀ estándar |
+| TIERRA-G0 | Aceleración estándar de la gravedad g₀ | 9.80665 | m/s² | F-NIST-G0 | 2026-11-14 | `verificado` | Exacto (CODATA) |
+| LUNA-RADIO-VOL | Radio volumétrico medio de la Luna | 1737.4 | km | F-NSSDC-MOON | 2026-11-14 | `verificado` | |
+| LUNA-G-SUPERFICIE | Gravedad superficial lunar | 1.62 | m/s² | F-NSSDC-MOON | 2026-11-14 | `verificado` | |
+| LUNA-DIST-SEMIEJE | Semieje mayor Tierra–Luna | 0.3844×10⁶ | km | F-NSSDC-MOON | 2026-11-14 | `verificado` | 384400 km |
+| LUNA-PESO-REF-80KG | Peso de referencia (80 kg) en la Luna | 129.6 | N | F-NSSDC-MOON | 2026-11-14 | `calculado` | P = m · g = 80 × 1.62; g lunar de F-NSSDC-MOON |
+| SS-TIERRA-RADIO | Radio medio (sistema solar) | 6371.000 | km | F-NSSDC-EARTH | 2026-11-14 | `verificado` | Alineado con TIERRA-RADIO-VOL |
+| SS-TIERRA-DIST | Distancia media al Sol | 1.00000011 | UA | F-NSSDC-EARTH | 2026-11-14 | `verificado` | Elementos J2000 de la ficha |
+| SS-TIERRA-PERIODO | Periodo orbital sidéreo | 365.256 | días | F-NSSDC-EARTH | 2026-11-14 | `verificado` | |
 
 ### Director de misión (modelo didáctico)
 

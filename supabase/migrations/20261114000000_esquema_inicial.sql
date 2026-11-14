@@ -104,7 +104,10 @@ INSERT INTO public.fuentes (id, nombre, url, clase, notas) VALUES
   ('F-STARLUST-B', 'Starlust (Artemis IV y V)', 'https://starlust.org/heres-what-nasa-is-planning-for-artemis-iv-and-v-now-that-the-roadmap-to-the-moon-has-been-revised/', 'secundaria', 'Previsiones de Artemis IV y V.'),
   ('F-IFS', 'IFLScience', 'https://www.iflscience.com/artemis-iii-has-already-been-pushed-back-to-late-2027-just-2-months-after-nasa-announced-ambitious-new-moon-plan-83377', 'secundaria', 'Indica finales de 2027 para Artemis III. Conflicto con otras fuentes.'),
   ('F-HORIZONS', 'JPL Horizons System', 'https://ssd.jpl.nasa.gov/horizons/', 'primaria', 'Referencia del método de efemérides. El periodo orbital del juego se calcula con Kepler, no se consulta Horizons en vivo en el MVP.'),
-  ('F-AF-DIR', 'Astro-fuente · modelo didáctico del Director', 'https://github.com/Angelitotech23/Astro-fuente', 'secundaria', 'Valores de masa, potencia, costo y enlace de datos del juego. Estimados educativos, no fichas oficiales de vuelo.');
+  ('F-AF-DIR', 'Astro-fuente · modelo didáctico del Director', 'https://github.com/Angelitotech23/Astro-fuente', 'secundaria', 'Valores de masa, potencia, costo y enlace de datos del juego. Estimados educativos, no fichas oficiales de vuelo.'),
+  ('F-NSSDC-EARTH', 'NASA NSSDC Earth Fact Sheet', 'https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html', 'primaria', 'Ficha planetaria de la Tierra (radio, atmósfera, campo magnético, núcleo). Consultada el 2026-11-14.'),
+  ('F-NSSDC-MOON', 'NASA NSSDC Moon Fact Sheet', 'https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html', 'primaria', 'Ficha de la Luna (radio, gravedad superficial, semieje). Consultada el 2026-11-14.'),
+  ('F-NIST-G0', 'NIST CODATA · standard acceleration of gravity', 'https://physics.nist.gov/cgi-bin/cuu/Value?gn', 'primaria', 'g₀ = 9,80665 m/s² (exacto). Consultada el 2026-11-14.');
 
 -- ---------------------------------------------------------------------------
 -- Semilla: misiones (Apolo 1 a 17 sin 2 ni 3, que según docs/fuentes.md no existieron; Artemis II)
@@ -156,9 +159,9 @@ INSERT INTO public.datos (id, etiqueta, valor, unidad, tipo, estado, fuente_id, 
   ('SS-VENUS-RADIO', 'Radio medio', NULL, 'km', 'oficial', 'pendiente', NULL, NULL),
   ('SS-VENUS-DIST', 'Distancia media al Sol', NULL, 'UA', 'oficial', 'pendiente', NULL, NULL),
   ('SS-VENUS-PERIODO', 'Periodo orbital', NULL, 'días', 'oficial', 'pendiente', NULL, NULL),
-  ('SS-TIERRA-RADIO', 'Radio medio', NULL, 'km', 'oficial', 'pendiente', NULL, NULL),
-  ('SS-TIERRA-DIST', 'Distancia media al Sol', NULL, 'UA', 'oficial', 'pendiente', NULL, NULL),
-  ('SS-TIERRA-PERIODO', 'Periodo orbital', NULL, 'días', 'oficial', 'pendiente', NULL, NULL),
+  ('SS-TIERRA-RADIO', 'Radio medio', '6371.000', 'km', 'oficial', 'verificado', 'F-NSSDC-EARTH', '2026-11-14'),
+  ('SS-TIERRA-DIST', 'Distancia media al Sol', '1.00000011', 'UA', 'oficial', 'verificado', 'F-NSSDC-EARTH', '2026-11-14'),
+  ('SS-TIERRA-PERIODO', 'Periodo orbital', '365.256', 'días', 'oficial', 'verificado', 'F-NSSDC-EARTH', '2026-11-14'),
   ('SS-MARTE-RADIO', 'Radio medio', NULL, 'km', 'oficial', 'pendiente', NULL, NULL),
   ('SS-MARTE-DIST', 'Distancia media al Sol', NULL, 'UA', 'oficial', 'pendiente', NULL, NULL),
   ('SS-MARTE-PERIODO', 'Periodo orbital', NULL, 'días', 'oficial', 'pendiente', NULL, NULL),
@@ -174,6 +177,25 @@ INSERT INTO public.datos (id, etiqueta, valor, unidad, tipo, estado, fuente_id, 
   ('SS-NEPTUNO-RADIO', 'Radio medio', NULL, 'km', 'oficial', 'pendiente', NULL, NULL),
   ('SS-NEPTUNO-DIST', 'Distancia media al Sol', NULL, 'UA', 'oficial', 'pendiente', NULL, NULL),
   ('SS-NEPTUNO-PERIODO', 'Periodo orbital', NULL, 'días', 'oficial', 'pendiente', NULL, NULL);
+
+-- Observatorio (módulos A Tierra y C Luna). Valores solo con fuente primaria leída.
+INSERT INTO public.datos (id, etiqueta, valor, unidad, tipo, estado, fuente_id, fecha_consulta, metodo) VALUES
+  ('TIERRA-RADIO-VOL', 'Radio volumétrico medio', '6371.000', 'km', 'oficial', 'verificado', 'F-NSSDC-EARTH', '2026-11-14', NULL),
+  ('TIERRA-NUCLEO-RADIO', 'Radio del núcleo', '3485', 'km', 'oficial', 'verificado', 'F-NSSDC-EARTH', '2026-11-14', NULL),
+  ('TIERRA-MANTO-ESPESOR', 'Espesor del manto', NULL, 'km', 'oficial', 'pendiente', NULL, NULL, NULL),
+  ('TIERRA-CORTEZA-ESPESOR', 'Espesor de la corteza', NULL, 'km', 'oficial', 'pendiente', NULL, NULL, NULL),
+  ('TIERRA-ATM-PRESION', 'Presión atmosférica superficial', '1014', 'mb', 'oficial', 'verificado', 'F-NSSDC-EARTH', '2026-11-14', NULL),
+  ('TIERRA-ATM-ESCALA', 'Altura de escala atmosférica', '8.5', 'km', 'oficial', 'verificado', 'F-NSSDC-EARTH', '2026-11-14', NULL),
+  ('TIERRA-ATM-N2', 'Nitrógeno (N₂) en aire seco', '78.08', '% vol', 'oficial', 'verificado', 'F-NSSDC-EARTH', '2026-11-14', NULL),
+  ('TIERRA-ATM-O2', 'Oxígeno (O₂) en aire seco', '20.95', '% vol', 'oficial', 'verificado', 'F-NSSDC-EARTH', '2026-11-14', NULL),
+  ('TIERRA-MAG-DIPOLO', 'Intensidad del dipolo geomagnético', '0.306', 'Gauss·Re³', 'oficial', 'verificado', 'F-NSSDC-EARTH', '2026-11-14', NULL),
+  ('TIERRA-MAG-SUPERFICIE', 'Campo magnético en superficie (1 Re)', '0.24–0.66', 'Gauss', 'oficial', 'verificado', 'F-NSSDC-EARTH', '2026-11-14', NULL),
+  ('TIERRA-G-MEDIA', 'Gravedad superficial media', '9.820', 'm/s²', 'oficial', 'verificado', 'F-NSSDC-EARTH', '2026-11-14', NULL),
+  ('TIERRA-G0', 'Aceleración estándar de la gravedad (g₀)', '9.80665', 'm/s²', 'oficial', 'verificado', 'F-NIST-G0', '2026-11-14', NULL),
+  ('LUNA-RADIO-VOL', 'Radio volumétrico medio', '1737.4', 'km', 'oficial', 'verificado', 'F-NSSDC-MOON', '2026-11-14', NULL),
+  ('LUNA-G-SUPERFICIE', 'Gravedad superficial', '1.62', 'm/s²', 'oficial', 'verificado', 'F-NSSDC-MOON', '2026-11-14', NULL),
+  ('LUNA-DIST-SEMIEJE', 'Semieje mayor Tierra–Luna', '0.3844×10⁶', 'km', 'oficial', 'verificado', 'F-NSSDC-MOON', '2026-11-14', NULL),
+  ('LUNA-PESO-REF-80KG', 'Peso de referencia (masa 80 kg) en la Luna', '129.6', 'N', 'calculado', 'verificado', 'F-NSSDC-MOON', '2026-11-14', 'P = m · g = 80 kg × 1.62 m/s² (g lunar de F-NSSDC-MOON)');
 
 -- ---------------------------------------------------------------------------
 -- Semilla: eventos. La explicación queda pendiente de fuente primaria.

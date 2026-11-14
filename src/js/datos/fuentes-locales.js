@@ -72,4 +72,25 @@ export const FUENTES_LOCALES = Object.freeze([
     clase: 'secundaria',
     notas: 'Valores de masa, potencia, costo y enlace de datos del juego. Estimados educativos, no fichas oficiales de vuelo.',
   },
+  {
+    id: 'F-NSSDC-EARTH',
+    nombre: 'NASA NSSDC Earth Fact Sheet',
+    url: 'https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html',
+    clase: 'primaria',
+    notas: 'Ficha planetaria de la Tierra (radio, atmósfera, campo magnético, núcleo). Consultada el 2026-11-14.',
+  },
+  {
+    id: 'F-NSSDC-MOON',
+    nombre: 'NASA NSSDC Moon Fact Sheet',
+    url: 'https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html',
+    clase: 'primaria',
+    notas: 'Ficha de la Luna (radio, gravedad superficial, semieje). Consultada el 2026-11-14.',
+  },
+  {
+    id: 'F-NIST-G0',
+    nombre: 'NIST CODATA · standard acceleration of gravity',
+    url: 'https://physics.nist.gov/cgi-bin/cuu/Value?gn',
+    clase: 'primaria',
+    notas: 'g₀ = 9,80665 m/s² (exacto). Consultada el 2026-11-14.',
+  },
 ]);

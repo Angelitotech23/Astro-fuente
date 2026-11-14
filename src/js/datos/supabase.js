@@ -5,6 +5,7 @@
 
 import { CONFIG } from '../config.js';
 import { FUENTES_LOCALES } from './fuentes-locales.js';
+import { DATOS_LOCALES } from './semilla-local.js';
 
 export const VERSION_SUPABASE_JS = '2.45.4';
 const URL_SDK = `https://cdn.jsdelivr.net/npm/@supabase/supabase-js@${VERSION_SUPABASE_JS}/+esm`;
@@ -21,12 +22,12 @@ export function hayConfiguracion() {
   return Boolean(CONFIG.supabaseUrl && CONFIG.supabasePublishableKey);
 }
 
-/** Catálogo mínimo usable sin backend (fuentes locales; resto vacío). */
+/** Catálogo usable sin backend: fuentes + datos del Observatorio/semilla local. */
 export function catalogoLocal() {
   return {
     fuentes: FUENTES_LOCALES.map((f) => ({ ...f })),
     misiones: [],
-    datos: [],
+    datos: DATOS_LOCALES.map((d) => ({ ...d })),
     eventos: [],
   };
 }
