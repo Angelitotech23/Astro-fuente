@@ -276,6 +276,51 @@ h3 { font-size: 1.05rem; margin: 0.8em 0 0.3em; }
 .formula__simbolica { font-family: ui-monospace, Menlo, Consolas, monospace; margin: 4px 0; overflow-wrap: anywhere; }
 .formula__sustituida { font-family: ui-monospace, Menlo, Consolas, monospace; margin: 0; color: var(--color-texto-suave); overflow-wrap: anywhere; }
 .simulador__supuestos { padding-left: 1.2em; }
+.simulador__no-despega {
+  background: color-mix(in srgb, var(--color-desactualizado) 14%, var(--color-superficie));
+  border: 1px solid var(--color-borde);
+  border-left: 4px solid var(--color-desactualizado);
+  border-radius: var(--radio);
+  padding: 12px;
+  margin: 12px 0;
+}
+.simulador__no-despega h2 { margin-top: 0; color: var(--color-desactualizado); }
+
+/* Observatorio */
+.observatorio__tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+.observatorio__tab {
+  font: inherit;
+  padding: 6px 12px;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background: var(--color-superficie);
+  color: var(--color-texto);
+  cursor: pointer;
+}
+.observatorio__tab[aria-selected="true"] {
+  background: var(--color-acento);
+  color: var(--color-acento-texto);
+  border-color: var(--color-acento);
+}
+.observatorio__lista { padding-left: 1.2em; }
+.observatorio__seccion { margin: 16px 0; }
+
+/* Preguntas curadas */
+.pregunta {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  padding: 12px;
+  margin: 12px 0;
+}
+.pregunta__respuesta { margin: 8px 0; }
+.pregunta__meta { display: grid; grid-template-columns: 1fr; gap: 2px 8px; margin: 0; }
+.pregunta__meta dt { font-weight: 600; color: var(--color-texto-suave); margin-top: 6px; }
+.pregunta__meta dd { margin: 0; }
+@media (min-width: 560px) {
+  .pregunta__meta { grid-template-columns: 160px 1fr; }
+  .pregunta__meta dt { margin-top: 0; }
+}
 
 /* Director de misión */
 .director {

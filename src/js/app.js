@@ -1,13 +1,16 @@
 // Punto de entrada: navegación por hash y carga inicial del catálogo.
 //
-// Rutas: #/ · #/sistema-solar · #/historico · #/mision/<id> · #/simulador · #/director · #/fuentes · #/futuro
+// Rutas: #/ · #/observatorio · #/sistema-solar · #/historico · #/mision/<id>
+//        · #/simulador · #/director · #/preguntas · #/fuentes · #/futuro
 
 import { ErrorDatos, cargarCatalogo, catalogoLocal } from './datos/supabase.js';
 import { vistaInicio } from './vistas/inicio.js';
+import { vistaObservatorio } from './vistas/observatorio.js';
 import { vistaSistemaSolar } from './vistas/sistema-solar.js';
 import { vistaHistorico, vistaMision } from './vistas/misiones.js';
 import { vistaFuentes } from './vistas/fuentes.js';
 import { vistaFuturo } from './vistas/futuro.js';
+import { vistaPreguntas } from './vistas/preguntas.js';
 import { vistaSimulador } from './simulador/vista.js';
 import { vistaDirector } from './director/vista.js';
 
@@ -28,11 +31,13 @@ function resolver(partes) {
   const [raiz, arg] = partes;
   switch (raiz) {
     case undefined: return (c, e) => vistaInicio(c, e);
+    case 'observatorio': return (c, e) => vistaObservatorio(c, e);
     case 'sistema-solar': return (c, e) => vistaSistemaSolar(c, e);
     case 'historico': return (c, e) => vistaHistorico(c, e);
     case 'mision': return (c, e) => vistaMision(c, arg, e);
     case 'simulador': return () => vistaSimulador();
     case 'director': return () => vistaDirector();
+    case 'preguntas': return (c, e) => vistaPreguntas(c, e);
     case 'fuentes': return (c, e) => vistaFuentes(c, e);
     case 'futuro': return () => vistaFuturo();
     default: return null;

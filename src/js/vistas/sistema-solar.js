@@ -63,6 +63,11 @@ export function vistaSistemaSolar(catalogo, error) {
   contenedor.append(el('p', {
     text: 'Esquema ilustrativo: las órbitas no están a escala. Usa las flechas del teclado o la lista para elegir un cuerpo.',
   }));
+  contenedor.append(el('p', {}, [
+    'Fichas detalladas de Tierra y Luna: ',
+    el('a', { href: '#/observatorio', text: 'Observatorio' }),
+    '.',
+  ]));
   const aviso = avisoDatos(error);
   if (aviso) contenedor.append(aviso);
 

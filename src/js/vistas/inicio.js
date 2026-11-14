@@ -4,10 +4,12 @@ import { avisoDatos, el } from './util.js';
 
 const MODULOS = [
   { nombre: 'Director de misión', estado: 'Juego de trade-offs: objetivo, bus, instrumentos, lanzador y órbita', ruta: '#/director' },
-  { nombre: 'Sistema solar', estado: 'En esta versión, con datos pendientes de verificación', ruta: '#/sistema-solar' },
+  { nombre: 'Observatorio', estado: 'Fichas de Tierra y Luna con fuente y fecha', ruta: '#/observatorio' },
+  { nombre: 'Sistema solar', estado: 'Esquema 2D; Tierra verificada (NSSDC), resto pendiente', ruta: '#/sistema-solar' },
   { nombre: 'Histórico Apolo y Artemis II', estado: 'Línea de tiempo con fechas pendientes', ruta: '#/historico' },
   { nombre: 'Trayectorias de Apolo 11 y Artemis II', estado: 'Esquema ilustrativo, sin cifras', ruta: '#/mision/apolo-11' },
-  { nombre: 'Simulador de vuelo', estado: 'Modelo simplificado de una fase', ruta: '#/simulador' },
+  { nombre: 'Simulador de vuelo', estado: 'Modelo simplificado de una fase, con fórmulas y supuestos', ruta: '#/simulador' },
+  { nombre: 'Preguntas curadas', estado: 'Respuestas con fuente URL y fecha', ruta: '#/preguntas' },
   { nombre: 'Programas futuros', estado: 'Artemis III, IV y V, con fecha de corte y fuentes', ruta: '#/futuro' },
   { nombre: 'Fuentes', estado: 'Registro legible de cada fuente', ruta: '#/fuentes' },
 ];
