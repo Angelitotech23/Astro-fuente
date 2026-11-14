@@ -1,0 +1,58 @@
+name: Validar
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  markdown:
+    name: Lint de Markdown
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ejecutar markdownlint
+        uses: DavidAnson/markdownlint-cli2-action@v19
+        with:
+          globs: |
+            **/*.md
+            !node_modules/**
+
+  pruebas:
+    name: Pruebas unitarias
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Ejecutar pruebas (modelo físico, verificabilidad y coherencia de fuentes)
+        run: npm test
+
+  secretos:
+    name: Buscar secretos
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verificar que no haya archivos sensibles versionados
+        run: |
+          set -e
+          if git ls-files | grep -E '(^|/)\.env($|\.)' | grep -v '\.env\.example$'; then
+            echo "Se encontró un archivo .env versionado."
+            exit 1
+          fi
+          if git ls-files | grep -E '\.(pem|key)$'; then
+            echo "Se encontró una clave privada versionada."
+            exit 1
+          fi
+          echo "Sin archivos sensibles versionados."

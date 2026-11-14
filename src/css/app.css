@@ -1,0 +1,276 @@
+/* Astro-fuente. Sin framework ni build. Diseño móvil primero. */
+
+:root {
+  --color-fondo: #f7f8fb;
+  --color-texto: #1b2230;
+  --color-texto-suave: #4a5568;
+  --color-superficie: #ffffff;
+  --color-borde: #d5dae3;
+  --color-acento: #1d5fbf;
+  --color-acento-texto: #ffffff;
+  --color-aviso-fondo: #fff4d6;
+  --color-aviso-texto: #5c3d00;
+  --color-ok: #17633a;
+  --color-pendiente: #5c3d00;
+  --color-desactualizado: #8a2b0b;
+  --radio: 8px;
+  --espacio: 16px;
+  --fuente: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-fondo: #0f141d;
+    --color-texto: #e6eaf2;
+    --color-texto-suave: #aab4c5;
+    --color-superficie: #161d2a;
+    --color-borde: #2c3749;
+    --color-acento: #7fb0ff;
+    --color-acento-texto: #0f141d;
+    --color-aviso-fondo: #3a2e10;
+    --color-aviso-texto: #ffe3a3;
+    --color-ok: #7fd9a4;
+    --color-pendiente: #ffe3a3;
+    --color-desactualizado: #ffb59c;
+  }
+}
+
+:root[data-theme="dark"] {
+  --color-fondo: #0f141d;
+  --color-texto: #e6eaf2;
+  --color-texto-suave: #aab4c5;
+  --color-superficie: #161d2a;
+  --color-borde: #2c3749;
+  --color-acento: #7fb0ff;
+  --color-acento-texto: #0f141d;
+  --color-aviso-fondo: #3a2e10;
+  --color-aviso-texto: #ffe3a3;
+  --color-ok: #7fd9a4;
+  --color-pendiente: #ffe3a3;
+  --color-desactualizado: #ffb59c;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; }
+
+body {
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: var(--fuente);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+a { color: var(--color-acento); }
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 3px solid var(--color-acento);
+  outline-offset: 2px;
+}
+
+.salto {
+  position: absolute;
+  left: -9999px;
+}
+.salto:focus { left: var(--espacio); top: var(--espacio); background: var(--color-acento); color: var(--color-acento-texto); padding: 8px; z-index: 10; }
+
+.cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px var(--espacio);
+  border-bottom: 1px solid var(--color-borde);
+  background: var(--color-superficie);
+}
+.marca { font-weight: 700; text-decoration: none; color: var(--color-texto); }
+.navegacion { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.navegacion a { text-decoration: none; padding: 4px 2px; }
+.navegacion a[aria-current="page"] { text-decoration: underline; font-weight: 600; }
+
+.contenedor {
+  flex: 1;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--espacio);
+}
+
+h1 { font-size: 1.6rem; margin: 0.5em 0; }
+h2 { font-size: 1.25rem; margin: 1.2em 0 0.4em; }
+h3 { font-size: 1.05rem; margin: 0.8em 0 0.3em; }
+
+.lead { font-size: 1.05rem; color: var(--color-texto-suave); }
+.nota { font-size: 0.9rem; color: var(--color-texto-suave); }
+
+.aviso {
+  background: var(--color-aviso-fondo);
+  color: var(--color-aviso-texto);
+  border-radius: var(--radio);
+  padding: 8px 12px;
+  margin: 8px 0;
+}
+
+.pie {
+  border-top: 1px solid var(--color-borde);
+  padding: 12px var(--espacio);
+  font-size: 0.85rem;
+  color: var(--color-texto-suave);
+}
+.pie p { margin: 0; max-width: 960px; margin-inline: auto; }
+
+/* Módulos de inicio */
+.modulos { padding-left: 1.2em; }
+.modulos__item { margin: 6px 0; }
+.modulos__estado { color: var(--color-texto-suave); }
+
+/* Componente de dato */
+.dato {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-left-width: 4px;
+  border-radius: var(--radio);
+  padding: 12px;
+  margin: 10px 0;
+}
+.dato--verificado { border-left-color: var(--color-ok); }
+.dato--pendiente { border-left-color: var(--color-pendiente); }
+.dato--desactualizado { border-left-color: var(--color-desactualizado); }
+.dato__etiqueta { margin-top: 0; }
+.dato__campos { display: grid; grid-template-columns: 1fr; gap: 2px 8px; margin: 0; }
+.dato__campos dt { font-weight: 600; color: var(--color-texto-suave); margin-top: 6px; }
+.dato__campos dd { margin: 0; }
+.dato__clase { color: var(--color-texto-suave); font-size: 0.9em; }
+.dato__estado { font-weight: 600; }
+.dato__aviso { color: var(--color-desactualizado); margin: 8px 0 0; font-size: 0.95rem; }
+@media (min-width: 560px) {
+  .dato__campos { grid-template-columns: 180px 1fr; }
+  .dato__campos dt { margin-top: 0; }
+}
+
+/* Línea de tiempo */
+.linea-tiempo { list-style: none; padding: 0; margin: 0; }
+.linea-tiempo__item { border-left: 2px solid var(--color-borde); padding: 0 0 16px 16px; }
+.linea-tiempo__titulo { margin-bottom: 0; }
+
+/* Sistema solar */
+.sistema__cuerpo-wrap { display: grid; gap: var(--espacio); grid-template-columns: 1fr; align-items: start; }
+.sistema__lista { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.sistema__boton {
+  font: inherit;
+  padding: 6px 10px;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background: var(--color-superficie);
+  color: var(--color-texto);
+  cursor: pointer;
+}
+.sistema__boton[aria-pressed="true"] { background: var(--color-acento); color: var(--color-acento-texto); border-color: var(--color-acento); }
+.sistema__esquema { width: 100%; max-width: 320px; height: auto; justify-self: center; }
+.sistema__orbita { fill: none; stroke: var(--color-borde); stroke-width: 1; }
+.sistema__sol { fill: #f5b841; }
+.sistema__cuerpo { fill: var(--color-acento); cursor: pointer; }
+.sistema__cuerpo--activo { stroke: var(--color-texto); stroke-width: 2; }
+@media (min-width: 720px) {
+  .sistema__cuerpo-wrap { grid-template-columns: 180px 1fr; }
+  .sistema__lista { flex-direction: column; flex-wrap: nowrap; }
+}
+
+/* Trayectoria */
+.trayectoria { width: 100%; max-width: 400px; height: auto; display: block; margin: 8px auto; }
+.trayectoria__ruta { stroke: var(--color-acento); stroke-width: 2; stroke-dasharray: 6 4; }
+.trayectoria__tierra { fill: #4f9d69; }
+.trayectoria__luna { fill: #b8bcc6; }
+.trayectoria__evento { fill: var(--color-superficie); stroke: var(--color-acento); stroke-width: 2; }
+.trayectoria__numero, .trayectoria__etiqueta, .trayectoria__leyenda { fill: var(--color-texto); font-size: 12px; }
+
+/* Eventos */
+.eventos { padding-left: 1.2em; }
+.eventos__item { margin-bottom: 8px; }
+.eventos__item p { margin: 4px 0; color: var(--color-texto-suave); }
+
+/* Tabla de fuentes */
+.tabla { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.tabla caption { text-align: left; font-weight: 600; padding: 6px 0; }
+.tabla th, .tabla td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--color-borde); vertical-align: top; }
+.tabla th { color: var(--color-texto-suave); font-weight: 600; }
+.tabla td a { overflow-wrap: anywhere; }
+
+/* Simulador */
+.simulador__form {
+  display: grid;
+  gap: var(--espacio);
+  grid-template-columns: 1fr;
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  padding: var(--espacio);
+}
+.campo { display: flex; flex-direction: column; gap: 4px; }
+.campo label { font-weight: 600; }
+.campo input {
+  font: inherit;
+  padding: 8px;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  width: 100%;
+  min-width: 0;
+}
+.campo--boton { justify-content: flex-end; }
+.boton {
+  font: inherit;
+  padding: 8px 12px;
+  border: 1px solid var(--color-acento);
+  border-radius: var(--radio);
+  background: var(--color-acento);
+  color: var(--color-acento-texto);
+  cursor: pointer;
+}
+.simulador__avisos:empty { display: none; }
+.simulador__avisos .aviso { border-left: 4px solid var(--color-desactualizado); }
+.resumen {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2px 8px;
+  margin: 12px 0;
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  padding: 12px;
+}
+.resumen dt { color: var(--color-texto-suave); font-weight: 600; }
+.resumen dd { margin: 0 0 6px; font-variant-numeric: tabular-nums; }
+@media (min-width: 560px) {
+  .resumen { grid-template-columns: 260px 1fr; }
+  .resumen dd { margin: 0; }
+}
+.simulador__graficas {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espacio);
+  margin: 12px 0;
+}
+.grafica { width: 100%; height: auto; background: var(--color-superficie); border: 1px solid var(--color-borde); border-radius: var(--radio); }
+.grafica__eje { stroke: var(--color-texto-suave); stroke-width: 1; }
+.grafica__linea { stroke: var(--color-acento); stroke-width: 2; }
+.grafica__texto { fill: var(--color-texto-suave); font-size: 10px; }
+@media (min-width: 720px) {
+  .simulador__graficas { grid-template-columns: repeat(3, 1fr); }
+  .simulador__form { grid-template-columns: repeat(3, 1fr); }
+}
+.formula {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  padding: 10px 12px;
+  margin: 8px 0;
+}
+.formula__simbolica { font-family: ui-monospace, Menlo, Consolas, monospace; margin: 4px 0; overflow-wrap: anywhere; }
+.formula__sustituida { font-family: ui-monospace, Menlo, Consolas, monospace; margin: 0; color: var(--color-texto-suave); overflow-wrap: anywhere; }
+.simulador__supuestos { padding-left: 1.2em; }
