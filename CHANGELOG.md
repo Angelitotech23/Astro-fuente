@@ -6,6 +6,10 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/
 
 ## [Sin publicar]
 
+### Cambiado
+
+- README principal bilingüe (English + Español), alineado con Space Apps 2026.
+
 ### Añadido
 
 - Director de misión (`#/director`): juego de trade-offs con objetivo, bus, instrumentos, lanzador y órbita; presupuestos de masa/potencia/datos/costo; debrief causal; fichas con fuente y supuestos; pruebas unitarias del motor.
