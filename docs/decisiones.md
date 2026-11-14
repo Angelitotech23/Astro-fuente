@@ -1,53 +1,70 @@
 # Decisiones y bloqueos del MVP
 
-Estado al 2026-11-14. Sesión sin persona disponible para confirmar: ninguna acción de escritura en cuentas externas se ha ejecutado.
+Estado al 2026-11-14 (America/La_Paz). Sesión sin persona disponible para confirmar acciones en cuentas externas: ninguna escritura en Supabase ni Vercel.
 
-## 1. Decisiones de la sección 5 del prompt
+## 1. Decisiones que solo puede tomar la persona dueña
 
 | # | Decisión | Estado | Motivo y siguiente paso |
 |---|---|---|---|
-| 1 | Crear el proyecto Supabase (región sugerida `us-east-1`) | **Pendiente de confirmación** | No se creó nada en la cuenta. Las tres bases existentes (`miau-market`, `Red-Bibosi`, `Raking 100 bolivia`) no se han tocado. Al confirmar: crear el proyecto, aplicar `supabase/migrations/20261114000000_esquema_inicial.sql` y anotar URL y clave publicable en `src/js/config.js`. |
-| 2 | Crear el proyecto Vercel enlazado al repositorio | **Pendiente de confirmación** | No se enlazó nada. Al confirmar: importar el repositorio en el equipo `jhoncitorc23-3787` como sitio estático, sin comando de build y con directorio raíz. |
-| 3 | Acceso a nasa.gov | **Bloqueado por la red** | Las peticiones a `www.nasa.gov` devuelven **403** desde el proxy de la sesión (política de red). No se ha eludido el bloqueo. Consecuencia: Apolo y Artemis quedan como `pendiente` (ver sección 3). |
-| 4 | Licencia del repositorio | **Pendiente de confirmación** | El README ya indica "Pendiente de definir por el equipo". No se añadió archivo `LICENSE`. |
+| 1 | Crear el proyecto Supabase (región sugerida `us-east-1`) | **Pendiente de confirmación** | No se creó nada en la cuenta. Al confirmar: aplicar `supabase/migrations/20261114000000_esquema_inicial.sql` y anotar URL y clave publicable en `src/js/config.js`. |
+| 2 | Crear el proyecto Vercel enlazado al repositorio | **Pendiente de confirmación** | No se enlazó nada. Procedimiento en `docs/despliegue.md`. |
+| 3 | Acceso a nasa.gov | **Bloqueado por la red** | `www.nasa.gov` devolvió **403** desde el proxy de la sesión. NSSDC (`nssdc.gsfc.nasa.gov`) y NIST sí respondieron. Consecuencia: misiones Apolo/Artemis siguen `pendiente` salvo datos NSSDC/NIST del Observatorio. |
+| 4 | Licencia del repositorio | **Pendiente de confirmación** | Sin archivo `LICENSE`. |
+| 5 | Migrar a Next.js + TypeScript (bóveda §5) | **No decidido por el agente** | El repo ya está en vanilla JS. Cambiar el stack es decisión de la persona dueña. |
 
-## 2. Bloqueos técnicos que afectan a la verificación
+## 2. Bloqueos técnicos
 
 | Bloqueo | Efecto | Cómo se resolverá |
 |---|---|---|
-| `cdn.jsdelivr.net` devuelve **403** desde el proxy de la sesión | `supabase-js` no puede cargarse aquí. El código lo carga solo cuando hay configuración, así que la app funciona sin él. | Comprobar la carga real en la preview de Vercel, con el proyecto ya configurado. |
-| Sin proyecto Supabase | El criterio "una consulta anónima devuelve `fuentes`" y el criterio de la fase 1 contra la base real quedan **sin verificar**. | Tras la decisión 1, ejecutar `tests/db/restricciones.sql` contra la base de desarrollo. |
-| Sin preview de Vercel | El criterio "la preview responde 200" de la fase 0 queda **sin verificar**. | Tras la decisión 2. |
+| `cdn.jsdelivr.net` puede devolver **403** en esta red | `supabase-js` no carga aquí. La app funciona con semilla local. | Comprobar en preview de Vercel. |
+| Sin proyecto Supabase | Criterios contra la base real sin verificar. | Tras la decisión 1. |
+| Sin preview de Vercel | Criterio HTTP 200 de fase 0 sin verificar. | Tras la decisión 2. |
 
-## 3. Datos y contenido
+## 3. Hecho en esta pasada (alineación con la bóveda)
 
-- **Programas futuros (Artemis III a V)** se muestran en `#/futuro` como **planificados**, con estado, fecha de corte (2026-11-14) y la fuente de cada fecha. Cuando las fuentes discrepan (Artemis III), se muestran todas y no se fija una sola. No se presentan como datos verificados.
-- **Métricas del simulador**: Isp, relación empuje/peso y Δv ideal se calculan en `metricasCohete` con g₀ = 9,80665 m/s² y se muestran con su fórmula.
+- **Observatorio (`#/observatorio`)**: fichas de Tierra (módulo A) y Luna (módulo C) con campos obligatorios. Valores verificados solo desde NSSDC/NIST; manto/corteza y misiones lunares quedan `pendiente` sin cifra.
+- **Preguntas curadas (`#/preguntas`)**: publicadas solo las respuestas con fuente URL (NIST/NSSDC). Ver sección 6 para las pendientes.
+- **Fuentes §7 y §16**: URLs y fechas añadidas donde fue posible; cifras de vehículos/motores marcadas **[Estimado]** y no publicadas en la UI.
+- **Idioma**: decisión cerrada como **ES+EN** en `docs/boveda/propuesta/13-decisiones-del-proyecto.md` y aquí.
+- **Simulador**: cada resultado muestra fórmulas (P, Isp, TWR, a₀, Δv, m_prop) y supuestos; caso «No despega» con mensaje claro (F ≤ m₀·g).
+- **Puerta A**: rutas revisadas en navegador local (ver sección 5).
 
-- **Todos los datos de misiones están `pendiente`.** No se ha leído ninguna fuente primaria. No se ha escrito ninguna cifra de memoria.
-- **Artemis II** usa fuentes secundarias (F-WTOP, F-NTD, F-BOEING). Se muestra como pendiente de verificación, sin cifra.
-- **Artemis III** tiene fechas en conflicto entre fuentes: no se fija una fecha única. Artemis III a V aparecen en `#/futuro` según la sección anterior.
-- **Apolo 1 a 17**: solo identificadores. Apolo 2 y 3 no tuvieron misión (según `docs/fuentes.md`) y no aparecen en la línea de tiempo.
-- **Explicaciones de los eventos**: texto marcado como pendiente de verificación. La redacción con fuente primaria depende del acceso a nasa.gov (bloqueo 3). La tabla `eventos` no tiene columna de fuente; si se requiere citar por afirmación, hace falta una decisión de esquema.
-- **Sistema solar**: los valores de radio, distancia y periodo se registran como pendientes. Son las únicas filas de la semilla sin fuente asociada.
-- **Trayectorias de Apolo 11 y Artemis II**: esquema etiquetado "sin cifras", como pide el prompt.
+## 4. Datos y contenido
 
-## 4. Verificación pendiente
+- **Programas futuros (Artemis III–V)** en `#/futuro` como planificados, con fecha de corte y fuentes; no como verificados.
+- **Métricas del simulador**: Isp, TWR y Δv con g₀ = 9,80665 m/s² y fórmula visible.
+- **Misiones**: siguen `pendiente` (bloqueo nasa.gov). Artemis II con fuentes secundarias, sin cifra.
+- **Sistema solar**: Tierra (radio, distancia, periodo) verificada con F-NSSDC-EARTH; el resto permanece `pendiente`.
+- **Inventario lunar robótico**: pendiente (sin fuente primaria con criterio común).
+
+## 5. Verificación
 
 | Criterio | Estado |
 |---|---|
-| `node --test` de las pruebas unitarias | **Cumplido localmente** (21 pruebas) |
-| Pruebas de restricciones y RLS (`tests/db/`) | **Cumplido en Postgres 16 local** con la migración aplicada y roles `anon`/`authenticated` creados. **No ejecutado** contra Supabase. |
-| Preview de Vercel con Playwright | **Pendiente**: sin preview. Local: sin errores de consola, todas las rutas, sin desplazamiento horizontal a 390 px. |
-| Coherencia `docs/fuentes.md` y tabla `fuentes` | **Cumplido** por `tests/unit/fuentes-coherencia.test.js` |
-| CI | Añadido job de pruebas unitarias. **Pendiente de ejecución** en GitHub. |
+| `npm test` | Debe pasar en CI/local tras esta pasada |
+| `node --check` de `.js` modificados | Debe pasar |
+| Restricciones SQL contra Supabase | No ejecutado (sin proyecto) |
+| Preview Vercel / Playwright | Pendiente (sin preview) |
+| Puerta A en navegador local (`python3 -m http.server 8080`) | **Cumplido** el 2026-11-14 (America/La_Paz): rutas `#/`, `#/director`, `#/observatorio`, `#/sistema-solar`, `#/historico`, `#/mision/apolo-11`, `#/mision/artemis-ii`, `#/simulador` (fórmulas, supuestos y «No despega»), `#/preguntas`, `#/futuro`, `#/fuentes` cargan; pie con aviso de no afiliación a la NASA; sin respaldo sugerido. Corregido typo `noDespegue`/`noDespega` que bloqueaba el simulador. |
+| Coherencia `docs/fuentes.md` ↔ semilla ↔ `fuentes-locales.js` | Cubierto por `tests/unit/fuentes-coherencia.test.js` |
 
-## 5. Decisiones técnicas tomadas
+## 6. Preguntas curadas pendientes (sin URL / «literatura estándar»)
 
-- **Director de misión en vanilla JS** (sin migrar a Next.js): con el plazo del hackathon se amplió el stack existente. El módulo vive en `src/js/director/` y responde al núcleo del reto Space Mission Design Game.
-- Los números del Director son estimados didácticos (`F-AF-DIR`) salvo periodos Kepler (`F-HORIZONS` como referencia metodológica).
-- `package.json` mínimo, sin dependencias, solo para `"type": "module"` y el script `npm test`. Se justifica aquí porque el prompt no lo pide.
-- `node --test tests/unit/` no acepta directorios en Node 22; se usa el patrón `tests/unit/*.test.js`.
-- El simulador integra la quema en exactamente `n` pasos que terminan en `t_b`. La fase (quemando o balística) se pasa explícitamente a `derivadas`, no se deduce de `t`. Deducirla de `t` sesgaba la última etapa de RK4 (error de ~1e-4 en `v_b`), y la prueba lo detectó.
-- `valor` se guarda como `text` para admitir texto y número.
-- Las fuentes con la misma página en dos periodos (Starlust) se registran como dos IDs.
+No publicadas en `#/preguntas`:
+
+| Tema | Motivo |
+|---|---|
+| Masa/empuje/Isp de Saturn V, Falcon 9, Starship, F-1, Merlin | Solo **[Estimado]** en §7; sin extracto verificado en el registro |
+| Gravedad superficial de Marte 3,71 m/s² y peso 80 kg en Marte | Factsheet marciano no leído en esta sesión |
+| Conteos de satélites activos / catálogos azmth | Sin URL primaria comprobada |
+| Inventario completo de alunizajes robóticos | Sin fuente primaria con criterio común de éxito/fallo |
+
+## 7. Decisiones técnicas tomadas
+
+- **Director y MVP en vanilla JS** (sin migrar a Next.js).
+- Números del Director: estimados didácticos (`F-AF-DIR`) salvo periodos Kepler (`F-HORIZONS` metodológico).
+- `package.json` mínimo, sin dependencias de runtime.
+- Semilla local (`src/js/datos/semilla-local.js`) para Observatorio sin Supabase.
+- Simulador: quema en `n` pasos hasta `t_b`; fase explícita en `derivadas`.
+- `valor` como `text` en la base.
+- Fuentes con la misma página en dos periodos (Starlust) = dos IDs.

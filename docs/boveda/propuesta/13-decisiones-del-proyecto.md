@@ -10,17 +10,17 @@ tags: [astro-fuente, propuesta]
 
 - [x] Nombre del proyecto: **Astro Fuente**.
 - [x] Plazo de entrega: **24 horas**.
-- [x] Stack: **Vercel** (hosting y funciones) y **Supabase** (base de datos, almacenamiento); lenguaje **TypeScript** con Next.js.
+- [x] Stack en el repositorio: **JavaScript vanilla** sin paso de compilación; esquema Supabase y despliegue Vercel estático documentados. (La propuesta original pedía TypeScript + Next.js; el repo decidió quedarse en vanilla JS — ver `docs/decisiones.md`.)
 - [x] Modelo de presentación: **simulador web** con datos verificables y parámetros de ejemplo.
+- [x] Idioma de la interfaz: **español e inglés (ES+EN)**. Cabecera, pie, inicio y Director son bilingües; el resto del contenido principal está en español con avisos EN donde aplica.
+- [x] Tratamiento de la marca: ninguna función sugiere respaldo de la NASA; pie y README lo declaran; no se usa el logotipo.
+- [x] Simulador de vuelo simplificado en fase 1: confirmado (Isp, TWR, Δv, fórmulas y supuestos visibles).
 
 ### Pendientes
 
 - [ ] Bases del reto: qué se evalúa (arte, interactividad, divulgación o rigor técnico).
 - [ ] Equipo disponible: número de personas y su perfil.
 - [ ] Fuente oficial de satélites y de telemetría por misión.
-- [ ] Tratamiento de la marca: confirmar que ninguna función sugiere respaldo de la NASA.
-- [ ] Idioma de la interfaz: español, inglés o ambos.
-- [ ] Confirmar que el simulador de vuelo simplificado entra en la fase 1 (cambio respecto a la versión 1).
 
 Up: [Propuesta](INDEX.md)
 

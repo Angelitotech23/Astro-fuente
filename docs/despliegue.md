@@ -15,7 +15,7 @@ Cuando el equipo confirme:
 
 El archivo [`vercel.json`](../vercel.json) fija cabeceras de seguridad básicas (`X-Content-Type-Options`, `Referrer-Policy`) y `cleanUrls`. No hay reescrituras: la app navega por hash (`#/...`), así que la raíz basta.
 
-Criterio de verificación posterior: la preview responde **200** en `/` y carga `#/director` sin errores de consola.
+Criterio de verificación posterior: la preview responde **200** en `/` y carga `#/director`, `#/observatorio` y `#/preguntas` sin errores de consola.
 
 ## 2. Supabase (opcional para el catálogo)
 
@@ -36,6 +36,9 @@ Ver [`.env.example`](../.env.example). En producción estática los valores púb
 npm test
 python3 -m http.server 8080      # Windows: py -m http.server 8080
 # Abrir http://localhost:8080/#/director
+# Puerta A: #/ · #/director · #/observatorio · #/sistema-solar · #/historico
+#           #/mision/apolo-11 · #/mision/artemis-ii · #/simulador · #/preguntas
+#           #/futuro · #/fuentes
 ```
 
 ## 5. Checklist del envío Space Apps
